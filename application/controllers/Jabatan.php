@@ -7,18 +7,21 @@ class Jabatan extends CI_Controller
     {
         parent::__construct();
 
-        // if (!$this->session->userdata('email')) {
-        //     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
-        //         Login Terlebih Dahulu!
-        //        </div>');
-        //     redirect('Autentikasi');
-        // }
+        if (!$this->session->userdata('nip_pengguna')) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+                Login Terlebih Dahulu!
+               </div>');
+            redirect('Autentikasi');
+        }
     }
 
     public function index()
     {
         $data['title'] = 'Halaman Jabatan';
-        $data['jabatan'] = $this->db->get('tb_jabatan')->result_array();
+
+        $this->db->from('tb_jabatan');
+        $this->db->order_by('nama_jabatan','asc');
+        $data['jabatan'] = $this->db->get()->result_array();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/navbar');

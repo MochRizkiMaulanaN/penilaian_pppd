@@ -9,7 +9,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item ">Data Subkriteria</li>
+                        <li class="breadcrumb-item ">Data kriteria</li>
                         <li class="breadcrumb-item active"><?= rawurldecode($nama_kriteria) ?></li>
                     </ol>
                 </div><!-- /.col -->

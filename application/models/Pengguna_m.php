@@ -8,6 +8,7 @@ class Pengguna_m extends CI_Model
         $this->db->select('*');
         $this->db->from('tb_pengguna pg');
         $this->db->join('tb_user_role r', 'pg.role_id = r.id_role');
+        $this->db->order_by('role_id', 'asc');
         return $this->db->get()->result_array();
     }
 
@@ -57,5 +58,24 @@ class Pengguna_m extends CI_Model
             'aktif' => $aktif_pengguna
         ];
         $this->db->update('tb_pengguna', $data, ['id_pengguna' => $id_pengguna]);
+    }
+
+    public function tambah_registrasi()
+    {
+        $nama_lengkap = $this->input->post('nama_lengkap');
+        $nip_pengguna = $this->input->post('nip_pengguna');
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+
+        $data = [
+            'role_id' => 4,
+            'nama_pengguna' => $nama_lengkap,
+            'nip_pengguna' => $nip_pengguna,
+            'email' => $email,
+            'password' => $password,
+            'aktif' => '0'
+        ];
+
+        $this->db->insert('tb_pengguna', $data);
     }
 }

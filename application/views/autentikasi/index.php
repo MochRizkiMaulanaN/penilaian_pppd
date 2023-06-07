@@ -5,25 +5,29 @@
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">Silahkan masukkan email dan password</p>
-
-            <form action="../../index3.html" method="post">
+            <p class="login-box-msg">Silahkan masukkan NIP dan Password</p>
+            <?php if ($this->session->flashdata('pesan')) {
+                echo $this->session->flashdata('pesan');
+            } ?>
+            <form action="<?= base_url('Autentikasi') ?>" method="post">
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email">
+                    <input type="number" name="nip_pengguna" class="form-control" placeholder="NIP">
                     <div class="input-group-append">
                         <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
+                            <span class="fas fa-user"></span>
                         </div>
                     </div>
                 </div>
+                <span class="text-danger" style="font-size: 13px;"><?= form_error('nip_pengguna') ?></span>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Password">
+                    <input type="password" name="password" class="form-control" placeholder="Password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
                 </div>
+                <span class="text-danger" style="font-size: 13px;"><?= form_error('password') ?></span>
                 <div class="row mb-1">
                     <!-- /.col -->
                     <div class="col">

@@ -12,7 +12,7 @@
         <!-- Navbar Search -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-                <span><i class="fas fa-solid fa-user mr-2"></i>Alexander Pierce</span>
+                <span><i class="fas fa-solid fa-user mr-2"></i><?= $this->session->userdata('nama_pengguna') ?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-item dropdown-header">15 Notifications</span>

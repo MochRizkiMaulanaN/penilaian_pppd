@@ -7,12 +7,12 @@ class Staff extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Staff_m');
-        // if (!$this->session->userdata('email')) {
-        //     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
-        //         Login Terlebih Dahulu!
-        //        </div>');
-        //     redirect('Autentikasi');
-        // }
+        if (!$this->session->userdata('nip_pengguna')) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+                Login Terlebih Dahulu!
+               </div>');
+            redirect('Autentikasi');
+        }
     }
 
     public function index()

@@ -7,16 +7,17 @@ class Autentikasi extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->library('form_validation');
+		$this->load->model('Pengguna_m');
 	}
 
 	public function index()
 	{
-		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email', [
-			'required' => 'Email tidak boleh kosong',
-			'valid_email' => 'Email tidak valid'
+		$this->form_validation->set_rules('nip_pengguna', 'NIP', 'required|trim|exact_length[8]', [
+			'required' => 'NIP tidak boleh kosong',
+			'exact_length' => 'NIP harus 8 digit angka'
 		]);
-		$this->form_validation->set_rules('katasandi', 'Kata sandi', 'required|trim', [
-			'required' => 'kata sandi tidak boleh kosong'
+		$this->form_validation->set_rules('password', 'Passoword', 'required|trim', [
+			'required' => 'Password tidak boleh kosong'
 		]);
 		if ($this->form_validation->run() == false) {
 			$data['title'] = 'Halaman Login';
@@ -30,52 +31,85 @@ class Autentikasi extends CI_Controller
 
 	public function registrasi()
 	{
-		$data['title'] = 'Halaman Registrasi';
-		$this->load->view('templates/header_login', $data);
-		$this->load->view('autentikasi/registrasi');
-		$this->load->view('templates/footer_login');
+		$this->form_validation->set_rules('nama_lengkap', 'Nama', 'required|trim', [
+			'required' => 'Nama tidak boleh kosong'
+		]);
+		$this->form_validation->set_rules('nip_pengguna', 'NIP', 'required|trim|exact_length[8]|is_unique[tb_pengguna.nip_pengguna]', [
+			'required' => 'NIP tidak boleh kosong',
+			'exact_length' => 'NIP harus 8 digit angka',
+			'is_unique' => 'NIP sudah ada'
+		]);
+		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email', [
+			'required' => 'Email tidak boleh kosong',
+			'valid_email' => 'Email tidak valid'
+		]);
+		$this->form_validation->set_rules('password', 'Password', 'required|trim', [
+			'required' => 'Password tidak boleh kosong'
+		]);
+
+		$this->form_validation->set_rules('konf_password', 'Konfirmasi Password', 'required|trim|matches[password]', [
+			'required' => 'Konfirmasi Password tidak boleh kosong',
+			'matches' => 'Password tidak sama',
+		]);
+
+		if ($this->form_validation->run() == false) {
+			$data['title'] = 'Halaman Registrasi';
+			$this->load->view('templates/header_login', $data);
+			$this->load->view('autentikasi/registrasi');
+			$this->load->view('templates/footer_login');
+		} else {
+			$this->Pengguna_m->tambah_registrasi();
+			$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+                Akun telah dibuat, silahkan login!
+               </div>');
+			redirect('Autentikasi');
+		}
 	}
 
 	public function masuk()
 	{
-		$email = $this->input->post('email');
-		$katasandi = $this->input->post('katasandi');
+		$nip_pengguna = $this->input->post('nip_pengguna');
+		$password = $this->input->post('password');
 
-		$this->db->select('*, pg.email');
+		$this->db->select('*');
 		$this->db->from('tb_pengguna pg');
-		$this->db->join('tb_jabatan jb', 'pg.id_jabatan = jb.id_jabatan');
-		$this->db->join('tb_perusahaan ph', 'pg.id_perusahaan = ph.id_perusahaan');
-		$this->db->where('pg.email', $email);
+		$this->db->join('tb_user_role ur', 'pg.role_id = ur.id_role');
+		$this->db->where('nip_pengguna', $nip_pengguna);
 		$pengguna = $this->db->get()->row_array();
+
+		// var_dump($pengguna); die;
 
 
 		if ($pengguna) {
+			//cek password
+			if ($password == $pengguna['password']) {
+				// var_dump('password benar'); die;
 
-			//cek katasandi
-			if ($katasandi == $pengguna['katasandi']) {
-				$data = [
-					'id_pengguna' => $pengguna['id_pengguna'],
-					'email' => $pengguna['email'],
-					'nama_pengguna' => $pengguna['nama_pengguna'],
-					'jabatan' => $pengguna['nama_jabatan'],
-					'perusahaan' => $pengguna['nama_perusahaan']
-				];
-				$this->session->set_userdata($data);
-
-				if ($pengguna['nama_jabatan'] == 'Admin' || $pengguna['nama_jabatan'] == 'Koordinator Area' || $pengguna['nama_jabatan'] == 'Manajer Outsource') {
-					redirect('Halaman_utama');
+				//cek status aktif
+				if ($pengguna['aktif'] == '1') {
+					$data = [
+						'nama_pengguna' => $pengguna['nama_pengguna'],
+						'nip_pengguna' => $pengguna['nip_pengguna'],
+						'role_id' => $pengguna['role_id'],
+						'nama_role' => $pengguna['nama_role'],
+					];
+					$this->session->set_userdata($data);
+					redirect('Dashboard');
 				} else {
-					redirect('Penilaian_mo');
+					$this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+                Maaf akun anda belum aktif!
+               </div>');
+					redirect('Autentikasi');
 				}
 			} else {
 				$this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
-                Email dengan kata sandi tidak sesuai
+                NIP dan Password tidak sesuai!
                </div>');
 				redirect('Autentikasi');
 			}
 		} else {
 			$this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
-               Email dengan kata sandi tidak sesuai
+               Silahkan registrasi terlebih dahulu!
               </div>');
 			redirect('Autentikasi');
 		}
@@ -197,11 +231,10 @@ class Autentikasi extends CI_Controller
 
 	public function keluar()
 	{
-		$this->session->unset_userdata('id_pengguna');
+		$this->session->unset_userdata('ni_pengguna');
 		$this->session->unset_userdata('nama_pengguna');
-		$this->session->unset_userdata('jabatan');
-		$this->session->unset_userdata('email');
-		$this->session->unset_userdata('perusahaan');
+		$this->session->unset_userdata('role_id');
+		$this->session->unset_userdata('nama_role');
 		$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
         Berhasil keluar aplikasi</div>');
 		redirect('Autentikasi');

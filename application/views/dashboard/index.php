@@ -29,30 +29,11 @@
             <!-- Main row -->
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                    <div class="jumbotron jumbotron-fluid">
+                        <div class="container text-center">
+                            <h1 class="display-4">Selamat Datang</h1>
+                            <p class="lead"><?= $this->session->userdata('nama_pengguna') ?></p>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="example1" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>NIK</th>
-                                        <th>Nama Pegawai</th>
-                                        <th>Jabatan</th>
-                                        <th>Tanggal Penilaian</th>
-                                        <th>Keterangan</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
                 </div>
@@ -80,4 +61,3 @@
     //   alert(id)
     // })
 </script>
-

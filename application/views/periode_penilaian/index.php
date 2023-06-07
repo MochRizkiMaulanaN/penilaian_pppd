@@ -43,8 +43,7 @@
                                         <th>#</th>
                                         <th>Tanggal Penilaian</th>
                                         <th>Nama Penilai</th>
-                                        <th>Staff</th>
-                                        <th>Jumlah</th>
+                                        <th>Staff yang dinilai</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -52,7 +51,33 @@
                                 <tbody>
                                     <?php
                                     $no = 1;
-                                    
+                                    foreach ($periode as $key => $value) { ?>
+                                        <tr>
+                                            <td><?= $no++; ?></td>
+                                            <td><?= date('d F Y', strtotime($value['tgl_penilaian']))  ?></td>
+                                            <td><?= $value['nama_penilai'] ?></td>
+                                            <td><?= $value['nama_staff'] ?></td>
+                                            <td>
+                                                <?php if ($value['status'] == 'belum') { ?>
+                                                    <span class="badge badge-danger">belum</span>
+                                                <?php } elseif ($value['status'] == 'sedang dinilai') { ?>
+                                                    <span class="badge badge-success">sedang dinilai</span>
+                                                <?php } else { ?>
+                                                    <span class="badge badge-primary">selesai</span>
+                                                <?php } ?>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
+
+                                                <?php if ($value['status'] == 'belum') { ?>
+                                                    <button class="btn btn-success btn-sm btn_kirim" data-idperiode="<?= $value['id_periode'] ?>" data-staffid="<?= $value['staff_id'] ?>"><i class="fas fa-solid fa-paper-plane"></i></button>
+                                                <?php } else { ?>
+                                                    <button class="btn btn-primary btn-sm btn_lihat" data-idperiode="<?= $value['id_periode'] ?>" data-staffid="<?= $value['staff_id'] ?>"><i class="fas fa-solid fa-eye"></i></button>
+                                                <?php } ?>
+
+                                            </td>
+                                        </tr>
+                                    <?php }
                                     ?>
                                 </tbody>
                             </table>
@@ -80,19 +105,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="tambah_staff">
+                <form id="tambah_periode">
                     <div class="form-group">
-                        <label for="nama_penilai">Nama Penilai</label>
-                        <input type="text" class="form-control" name="nama_penilai" id="nama_penilai">
+                        <label for="tgl_penilaian">Tanggal Penilaiain</label>
+                        <input type="date" class="form-control" name="tgl_penilaian" id="tgl_penilaian">
                     </div>
-                    <div class="form-group">
-                        <label for="nip_staff">NIP</label>
-                        <input type="text" class="form-control" name="nip_staff" id="nip_staff">
-                    </div>
-                    <div class="form-group">
-                        <label for="nama_staff">Nama Staff</label>
-                        <input type="text" class="form-control" name="nama_staff" id="nama_staff">
-                    </div>
+
+                    <!-- <div class="form-group">
+                        <label for="nama_staff">Staff yang dinilai</label>
+                        <select class="select2 form-control" name="nama_staff" id="nama_staff">
+                            <option value="">Pilih salah satu</option>
+                            <?php foreach ($staff as $key => $value) { ?>
+                                <option value="<?= $value['id_staff'] ?>"><?= $value['nama_staff'] ?></option>
+                            <?php } ?>
+
+                        </select>
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -106,31 +134,27 @@
 </div>
 <!-- /.modal -->
 
-<!-- modal ubah staff -->
-<div class="modal fade" id="modal_ubah_staff">
+<!-- modal ubah periode -->
+<div class="modal fade" id="modal_ubah_periode">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Ubah Staff</h4>
+                <h4 class="modal-title">Ubah periode</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="ubah_staff">
-                    <input type="hidden" id="id_staff_ubah">
+                <form id="ubah_periode">
+                    <input type="hidden" id="id_periode_ubah">
                     <div class="form-group">
-                        <label for="nama_penilai_ubah">Nama Penilai</label>
-                        <input type="text" class="form-control" name="nama_penilai_ubah" id="nama_penilai_ubah">
+                        <label for="tgl_penilaian_ubah">Tanggal Penilaian</label>
+                        <input type="text" class="form-control" name="tgl_penilaian_ubah" id="tgl_penilaian_ubah">
                     </div>
-                    <div class="form-group">
-                        <label for="nip_staff_ubah">NIP</label>
-                        <input type="text" class="form-control" name="nip_staff_ubah" id="nip_staff_ubah">
-                    </div>
-                    <div class="form-group">
-                        <label for="nama_staff_ubah">Nama Staff</label>
+                    <!-- <div class="form-group">
+                        <label for="nama_staff_ubah">Staff yang dinilai</label>
                         <input type="text" class="form-control" name="nama_staff_ubah" id="nama_staff_ubah">
-                    </div>
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -146,74 +170,80 @@
 
 <script>
     $(function() {
-        // Select2 Single  with Placeholder
-        $('.select2-single-placeholder').select2({
-            placeholder: "Pilih Perusahaan",
-            allowClear: true,
-            // dropdownParent: $("#modal_tambah")
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+
+        $('#tambah_periode').validate({
+            ignore: [],
+            rules: {
+                tgl_penilaian: 'required',
+                nama_staff: 'required',
+
+            },
+            messages: {
+                tgl_penilaian: {
+                    required: "Silahkan masukkan tanggal penilaian",
+                },
+                nama_staff: {
+                    required: "Silahkan pilih salah satu",
+
+                },
+
+
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            },
+
+            submitHandler: function() {
+                tgl_penilaian = $('#tgl_penilaian').val()
+                nama_staff = $('#nama_staff').val()
+
+                //console.log(nama_pengguna, email_pengguna, role_pengguna, password)
+                $.ajax({
+                    method: 'post',
+                    url: '<?= base_url('Periode_penilaian/tambah') ?>',
+                    data: {
+                        tgl_penilaian: tgl_penilaian,
+                        nama_staff: nama_staff
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        if (status == 1) {
+                            $('#modal_tambah_periode').hide()
+                            swall('Ditambahkan')
+                        }else{
+                            $('#modal_tambah_periode').hide()
+                            swall_gagal('Ditambahkan')
+                        }
+                    }
+                })
+            }
+
         });
 
+        $('.btn_hapus').click(function() {
+            id = $(this).data('id');
+            // console.log(id)
+            hapus(id)
+        })
+
+        $('.btn_kirim').click(function() {
+            id_periode = $(this).data('idperiode');
+            staff_id = $(this).data('staffid');
+            kirim(id_periode, staff_id)
+        })
+
     })
-
-    function swall($title) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Data Berhasil ' + $title,
-            showConfirmButton: false,
-            timer: 1500
-        }).then((result) => {
-            location.reload();
-        })
-
-    }
-
-    function reset() {
-        $('#form')[0].reset();
-    }
-
-    function tambah() {
-        nama_perusahaan = $('#perusahaan').val()
-        jumlah_sequrity = $('#jml_sequrity').val()
-        tgl_periode = $('#tgl_periode').val()
-
-        $.ajax({
-            method: 'POST',
-            url: '<?= base_url('Periode_penilaian/tambah')  ?>',
-            data: {
-                nama_perusahaan: nama_perusahaan,
-                jumlah_sequrity: jumlah_sequrity,
-                tgl_periode: tgl_periode
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (data.status == 'gagal') {
-                    $('#nama_perusahaan_error').html(data.nama_perusahaan)
-                    $('#tgl_periode_error').html(data.tgl_periode)
-                } else
-                if (data.status == 'berhasil') {
-                    $('#modal_tambah').modal('hide')
-                    swall('Ditambahkan')
-                }
-            }
-
-        })
-    }
-
-    function tampil_jumlah() {
-        perusahaan = $('#perusahaan').val()
-        $.ajax({
-            method: 'POST',
-            url: '<?= base_url('Penilaian_ka/tampil_jumlah')  ?>',
-            data: {
-                perusahaan: perusahaan,
-            },
-            dataType: 'json',
-            success: function(data) {
-                $('#jml_sequrity').val(data)
-            }
-
-        })
-    }
 
     function hapus(id) {
         Swal.fire({
@@ -229,13 +259,13 @@
             if (result.isConfirmed) {
                 $.ajax({
                     method: 'POST',
-                    url: '<?= base_url('Penilaian_ka/hapus')  ?>',
+                    url: '<?= base_url('Periode_penilaian/hapus')  ?>',
                     data: {
-                        id: id,
+                        id_periode: id,
                     },
                     dataType: 'json',
-                    success: function(data) {
-                        if (data == 'berhasil') {
+                    success: function(status) {
+                        if (status == 1) {
                             swall('Dihapus')
                         }
                     }
@@ -243,5 +273,62 @@
                 })
             }
         })
+    }
+
+    function kirim(id_periode, staff_id) {
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Data penilaian pegawai akan dikirim ke tabel penilaian",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, kirim',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'POST',
+                    url: '<?= base_url('Periode_penilaian/tambah_penilaian')  ?>',
+                    data: {
+                        id_periode: id_periode,
+                        staff_id: staff_id,
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        if (status == 1) {
+                            swall('Dikirim')
+
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+
+    function swall($title) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Data Berhasil ' + $title,
+            showConfirmButton: false,
+            timer: 1500
+        }).then((result) => {
+            location.reload();
+        })
+
+    }
+
+    function swall_gagal($title) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Data Gagal ' + $title,
+            text: "Data periode penilaian  !!",
+            showConfirmButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            location.reload();
+        })
+
     }
 </script>
