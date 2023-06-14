@@ -57,6 +57,8 @@ class Pegawai extends CI_Controller
                 'alamat_pegawai' => $pegawai['alamat'],
                 'no_telp' => $pegawai['no_telp'],
                 'email_pegawai' => $pegawai['email'],
+                'masa_kontrak' => $pegawai['akhir_kontrak'],
+                'status_pegawai' => $pegawai['status_pegawai'],
                 'status' => 1
             ];
             echo json_encode($data);

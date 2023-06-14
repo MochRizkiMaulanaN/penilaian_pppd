@@ -39,12 +39,12 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="<?= base_url('Role') ?>" class="nav-link">
+                            <!-- <li class="nav-item">
+                                <a href="<?// base_url('Role') ?>" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Data Role</p>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
                                 <a href="<?= base_url('Pengguna') ?>" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -102,6 +102,26 @@
                                 </p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('Laporan_penilaian') ?>" class="nav-link">
+                                <i class="nav-icon fas fa-solid fa-folder"></i>
+                                <p>
+                                    Laporan Penilaian
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<?= base_url('Rekomendasi') ?>" class="nav-link">
+                                <i class="nav-icon fas fa-solid fa-clipboard"></i>
+                                <p>
+                                    Rekomendasi
+                                </p>
+                            </a>
+                        </li>
+
+
                     <?php } else { ?>
                         <li class="nav-item">
                             <a href="<?= base_url('Penilaian') ?>" class="nav-link">
@@ -132,7 +152,7 @@
 
             </ul>
             <a href="<?= base_url('Autentikasi/keluar') ?>" class="nav-link">
-                <i class="nav-icon far fa-logout"></i>
+                <i class="nav-icon fas fa-solid fa-right-from-bracket"></i>
                 <p>
                     Logout
                 </p>

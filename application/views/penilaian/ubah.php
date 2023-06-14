@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Penilaian</h1>
+                    <h1 class="m-0">Ubah Data Penilaian</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">Data Penilaian</li>
+                        <li class="breadcrumb-item">Ubah Data Penilaian</li>
                         <li class="breadcrumb-item active"><?= $pegawai['nama_pegawai'] ?></li>
                     </ol>
                 </div><!-- /.col -->
@@ -32,26 +32,24 @@
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
-                                    <input type="hidden" id="staff_id" value="<?= $pegawai['staff_id'] ?>">
-                                    <input type="hidden" id="periode_id" value="<?= $pegawai['periode_id'] ?>">
                                     <input type="hidden" id="penilaian_id" value="<?= $pegawai['id_penilaian'] ?>">
                                     <input type="hidden" id="pegawai_id" value="<?= $pegawai['pegawai_id'] ?>">
                                     <?php foreach ($kriteria as $key => $value) { ?>
                                         <tr>
                                             <th class="text-white" bgcolor="#8496a9" colspan="2"><?= $value['nama_kriteria']; ?></th>
                                             <?php foreach ($subkriteria as $key => $subvalue) {
-                                                if ($subvalue['id_kriteria'] == $value['id_kriteria']) { ?>
+                                                if ($value['id_kriteria'] == $subvalue['id_kriteria']) { ?>
 
                                         <tr>
                                             <td><?= $subvalue['nama_subkriteria'] ?></td>
                                             <td>
-                                                <input type="hidden" id="subkriteria<?= $subvalue['id_subkriteria'] ?>" value="<?= $subvalue['id_subkriteria'] ?>">
+                                                <input type="text" id="subkriteria<?= $subvalue['id_subkriteria'] ?>" value="<?= $subvalue['id_subkriteria'] ?>">
                                                 <select name="" id="nilaisub<?= $subvalue['id_subkriteria'] ?>" class="form-control">
-                                                    <option value="5">5 - Sangat Baik</option>
-                                                    <option value="4">4 - Baik</option>
-                                                    <option value="3">3 - Cukup</option>
-                                                    <option value="2">2 - Kurang</option>
-                                                    <option value="1">1 - Kurang Sekali</option>
+                                                <?php foreach ($level_nilai as $key => $value) { ?>
+                                                    <option value="<?= $value['nilai_level'] ?>"><?= $value['nilai_level'] ?> - <?= $value['nama_level'] ?></option>
+                                                <?php } ?>
+                                                    
+                                            
                                                 </select>
                                             </td>
                                         </tr>
@@ -109,9 +107,7 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                periode_id = $('#periode_id').val()
                 pegawai_id = $('#pegawai_id').val()
-                staff_id = $('#staff_id').val()
                 penilaian_id = $('#penilaian_id').val()
                 subkriteria1 = $('#subkriteria1').val()
                 subkriteria2 = $('#subkriteria2').val()
@@ -143,9 +139,7 @@
                     method: 'post',
                     url: '<?= base_url('Penilaian/tambah') ?>',
                     data: {
-                        periode_id: periode_id,
                         pegawai_id: pegawai_id,
-                        staff_id: staff_id,
                         penilaian_id: penilaian_id,
                         subkriteria1: subkriteria1,
                         subkriteria2: subkriteria2,

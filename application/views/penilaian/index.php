@@ -58,14 +58,17 @@
                                             <td>
                                                 <?php if ($value['status'] == 1) { ?>
                                                     <span class="badge badge-primary">Sudah dinilai</span>
-                                                <?php } elseif ($value['status'] == 0) { ?>
+                                                <?php } else { ?>
                                                     <span class="badge badge-danger">Belum dinilai</span>
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <a href="<?= base_url('Penilaian/tambah/' . $value['id_penilaian']) ?>" class="btn btn-primary btn-sm btn_tambah"><i class="fas fa-solid fa-plus"></i></a>
 
-                                                <button class="btn btn-warning btn-sm btn_ubah" data-toggle="modal" data-target="#pengguna_modal_ubah" data-id="<?= $value['id_penilaian'] ?>"><i class="fas fa-solid fa-pencil-alt"></i></button>
+                                                <?php if ($value['status'] == 1) { ?>
+                                                    <a href="<?= base_url('Penilaian/ubah_form/' . $value['id_penilaian']) ?>" class="btn btn-warning btn-sm btn_ubah"><i class="fas fa-solid fa-pencil-alt"></i></a>
+                                                <?php } else { ?>
+                                                    <a href="<?= base_url('Penilaian/tambah_form/' . $value['id_penilaian']) ?>" class="btn btn-primary btn-sm btn_tambah"><i class="fas fa-solid fa-plus"></i></a>
+                                                <?php } ?>
 
                                             </td>
                                         </tr>

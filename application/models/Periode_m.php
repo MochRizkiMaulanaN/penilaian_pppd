@@ -7,27 +7,42 @@ class Periode_m extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('tb_periode_penilaian pp');
-        $this->db->join('tb_staff st', 'pp.staff_id = st.id_staff');
+        $this->db->order_by('tgl_penilaian', 'desc');
+        return $this->db->get()->result_array();
+    }
+
+    public function tampil_detail_periode($id_periode)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_detail_periode dp');
+        $this->db->join('tb_staff st', 'dp.staff_id = st.id_staff');
+        $this->db->where('periode_id', $id_periode);
+        $this->db->order_by('tgl_penilaian', 'desc');
         return $this->db->get()->result_array();
     }
 
     public function tambah_periode($tgl_penilaian)
     {
-        $staff = $this->db->get('tb_staff')->result_array();
+        // $staff = $this->db->get('tb_staff')->result_array();
 
-        $data_periode = [];
-        foreach ($staff as $key => $value) {
-            $data = [
-                'tgl_penilaian' => $tgl_penilaian,
-                'staff_id' => $value['id_staff'],
-                'status' => 'belum'
-            ];
+        // $data_periode = [];
+        // foreach ($staff as $key => $value) {
+        //     $data = [
+        //         'tgl_penilaian' => $tgl_penilaian,
+        //         'staff_id' => $value['id_staff'],
+        //         'status' => 'belum'
+        //     ];
 
-            array_push($data_periode, $data);
-        }
+        //     array_push($data_periode, $data);
+        // }
+        // $this->db->insert_batch('tb_periode_penilaian', $data_periode);
 
+        $data = [
+            'tgl_penilaian' => $tgl_penilaian,
+            'status' => 'belum'
+        ];
 
-        $this->db->insert_batch('tb_periode_penilaian', $data_periode);
+        $this->db->insert('tb_periode_penilaian', $data);
     }
 
     public function cek_statusPeriode($tgl_penilaian)
@@ -44,18 +59,18 @@ class Periode_m extends CI_Model
             $cek_data = $this->db->get('tb_periode_penilaian')->result_array();
             if ($cek_data) {
                 foreach ($cek_data as $key => $value) {
-                    if ($value['status'] == 'belum' || $value['status'] == 'sedang dinilai') {
+                    if ($value['status'] == 'belum' || $value['status'] == 'proses penilaian') {
                         return true;
                         break;
                     } else {
                         $this->db->group_by('tgl_penilaian');
                         $this->db->order_by('tgl_penilaian', 'desc');
                         $this->db->limit(1);
-                        $cek_tanggal = $this->db->get('tb_periode_penilaian')->result_array();
+                        $cek_tanggal = $this->db->get('tb_periode_penilaian')->row_array();
 
                         $tgl_sebelumnya = $cek_tanggal['tgl_penilaian'];
 
-                        $tgl_berikutnya = date('d F Y', strtotime('+3 month', strtotime($tgl_sebelumnya)));
+                        $tgl_berikutnya = date('Y-m-d', strtotime('+3 month', strtotime($tgl_sebelumnya)));
 
                         if (strtotime($tgl_penilaian) >= strtotime($tgl_berikutnya)) {
                             $this->tambah_periode($tgl_penilaian);
@@ -73,19 +88,43 @@ class Periode_m extends CI_Model
     }
 
 
-    public function tambah_penilaian()
+    public function tambah_detail_periode($tgl_penilaian, $id_periode)
     {
-        $id_periode = $this->input->post('id_periode');
-        $staff_id = $this->input->post('staff_id');
 
-        $data_pegawai = $this->db->get_where('tb_pegawai', ['staff_id' => $staff_id])->result_array();
+        //tambah data ke tabel detail periode
+        $staff = $this->db->get('tb_staff')->result_array();
 
+        $data_periode = [];
+        foreach ($staff as $key => $value) {
+            $data = [
+                'periode_id' => $id_periode,
+                'tgl_penilaian' => $tgl_penilaian,
+                'staff_id' => $value['id_staff'],
+                'status' => 'proses penilaian'
+            ];
+
+            array_push($data_periode, $data);
+        }
+        $this->db->insert_batch('tb_detail_periode', $data_periode);
+
+        //update status di tabel periode penilaian
+        $this->db->update('tb_periode_penilaian', ['status' => 'sedang dinilai'], ['id_periode' => $id_periode]);
+    }
+
+    public function tambah_penilaian($id_periode)
+    {
+
+        $data_pegawai = $this->db->get_where('tb_pegawai')->result_array();
+
+        // if (!$data_pegawai) {
+        //     return true;
+        // } else {
         $data_penilaian = [];
         foreach ($data_pegawai as $key => $value) {
             $pegawai_staff = [
                 'periode_id' => $id_periode,
                 'pegawai_id' => $value['id_pegawai'],
-                'staff_id' => $staff_id,
+                'staff_id' => $value['staff_id'],
                 'status' => 0,
                 'nilai' => 0,
                 'passing_grade' => 0,
@@ -94,12 +133,7 @@ class Periode_m extends CI_Model
 
             array_push($data_penilaian, $pegawai_staff);
         }
-
-
         $this->db->insert_batch('tb_penilaian', $data_penilaian);
-
-        //update status di tabel periode penilaian
-        $this->db->update('tb_periode_penilaian', ['status' => 'sedang dinilai'], ['id_periode' => $id_periode]);
     }
 
 

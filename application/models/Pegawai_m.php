@@ -29,6 +29,7 @@ class Pegawai_m extends CI_Model
         $email_pegawai = $this->input->post('email_pegawai');
         $alamat_pegawai = $this->input->post('alamat_pegawai');
         $nama_jabatan = $this->input->post('nama_jabatan');
+        $masa_kontrak = $this->input->post('masa_kontrak');
         $nama_staff = $this->input->post('nama_staff');
         $no_telp = $this->input->post('no_telp');
 
@@ -39,7 +40,9 @@ class Pegawai_m extends CI_Model
             'nip_pegawai' => $nip_pegawai,
             'alamat' => $alamat_pegawai,
             'no_telp' => $no_telp,
-            'email' => $email_pegawai
+            'email' => $email_pegawai,
+            'akhir_kontrak' => $masa_kontrak,
+            'status_pegawai' => 1,
         ];
 
         $this->db->insert('tb_pegawai', $data);
@@ -53,8 +56,10 @@ class Pegawai_m extends CI_Model
         $email_pegawai = $this->input->post('email_pegawai');
         $alamat_pegawai = $this->input->post('alamat_pegawai');
         $nama_jabatan = $this->input->post('nama_jabatan');
+        $masa_kontrak = $this->input->post('masa_kontrak');
         $nama_staff = $this->input->post('nama_staff');
         $no_telp = $this->input->post('no_telp');
+        $status_pegawai = $this->input->post('status_pegawai');
 
         $data = [
             'jabatan_id' => $nama_jabatan,
@@ -63,7 +68,9 @@ class Pegawai_m extends CI_Model
             'nip_pegawai' => $nip_pegawai,
             'alamat' => $alamat_pegawai,
             'no_telp' => $no_telp,
-            'email' => $email_pegawai
+            'email' => $email_pegawai,
+            'akhir_kontrak' => $masa_kontrak,
+            'status_pegawai' => $status_pegawai
         ];
 
 

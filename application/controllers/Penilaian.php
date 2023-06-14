@@ -33,7 +33,7 @@ class Penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-    public function tambah($id_penilaian)
+    public function tambah_form($id_penilaian)
     {
 
         $data['title'] = 'Halaman Tambah Penilaian';
@@ -48,14 +48,33 @@ class Penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-
-
-    public function tampil_jumlah()
+    public function ubah_form($id_penilaian)
     {
-        $perusahaan = $this->input->post('perusahaan');
-        $query_jumlah = $this->db->get_where('tb_sequrity', ['id_perusahaan' => $perusahaan])->num_rows();
 
-        echo json_encode($query_jumlah);
+        $data['title'] = 'Halaman Ubah Penilaian';
+        $data['pegawai'] = $this->Penilaian_m->pegawai_idpenilaian($id_penilaian);
+        $data['kriteria'] = $this->Kriteria_m->tampil_kriteria();
+        $data['subkriteria'] = $this->db->get('tb_subkriteria')->result_array();
+
+        $data['detail_penilaian'] = $this->db->get_where('tb_detail_penilaian',['penilaian_id' => $id_penilaian])->result_array();
+        $data['level_nilai'] = $this->db->get('tb_level_nilai')->result_array();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('penilaian/ubah', $data);
+        $this->load->view('templates/footer');
+    }
+
+
+
+    public function tambah()
+    {
+        if ($this->input->is_ajax_request()) {
+            $this->Penilaian_m->tambah_penilaian();
+            $status = 1;
+            echo json_encode($status);
+        }
     }
 
     public function edit_penilaian($nama_sequrity, $nama_perusahaan, $id_sequrity)

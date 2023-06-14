@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Periode Penilaian</h1>
+                    <h1 class="m-0">Detail Periode Penilaian</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Periode Penilaian</li>
+                        <li class="breadcrumb-item active">Detail Periode Penilaian</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,8 +31,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_periode">
-                                <i class="fa fa-plus"></i> Tambah Data
+                            <button class="btn btn-primary" onclick="hitung_nilaiAkhir()" >
+                                Hitung Nilai Akhir
                             </button>
                         </div>
                         <!-- /.card-header -->
@@ -42,6 +42,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Tanggal Penilaian</th>
+                                        <th>Nama Penilai</th>
+                                        <th>Staff yang dinilai</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -49,26 +51,22 @@
                                 <tbody>
                                     <?php
                                     $no = 1;
-                                    foreach ($periode as $key => $value) { ?>
+                                    foreach ($detail_periode as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
                                             <td><?= date('d F Y', strtotime($value['tgl_penilaian']))  ?></td>
+                                            <td><?= $value['nama_penilai'] ?></td>
+                                            <td><?= $value['nama_staff'] ?></td>
                                             <td>
-                                                <?php if ($value['status'] == 'belum') { ?>
-                                                    <span class="badge badge-danger">belum</span>
-                                                <?php } elseif ($value['status'] == 'sedang dinilai') { ?>
-                                                    <span class="badge badge-success">sedang dinilai</span>
+                                                <?php if ($value['status'] == 'proses penilaian') { ?>
+                                                    <span class="badge badge-success">proses penilaian</span>
                                                 <?php } else { ?>
                                                     <span class="badge badge-primary">selesai</span>
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
-
-                                                <?php if ($value['status'] == 'belum') { ?>
-                                                    <button class="btn btn-success btn-sm btn_kirim" data-idperiode="<?= $value['id_periode'] ?>" data-tglpenilaian="<?= $value['tgl_penilaian'] ?>"><i class="fas fa-solid fa-paper-plane"></i></button>
-                                                <?php } else { ?>
-                                                    <a href="<?= base_url('Periode_penilaian/detail_periode/'). $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat" ><i class="fas fa-solid fa-eye"></i></a>
+                                                <?php if ($value['status'] == 'selesai') { ?>
+                                                    <button class="btn btn-primary btn-sm btn_lihat" data-idperiode="<?= $value['periode_id'] ?>" data-staffid="<?= $value['staff_id'] ?>"><i class="fas fa-solid fa-eye"></i></button>
                                                 <?php } ?>
 
                                             </td>
@@ -106,6 +104,17 @@
                         <label for="tgl_penilaian">Tanggal Penilaiain</label>
                         <input type="date" class="form-control" name="tgl_penilaian" id="tgl_penilaian">
                     </div>
+
+                    <!-- <div class="form-group">
+                        <label for="nama_staff">Staff yang dinilai</label>
+                        <select class="select2 form-control" name="nama_staff" id="nama_staff">
+                            <option value="">Pilih salah satu</option>
+                            <?php foreach ($staff as $key => $value) { ?>
+                                <option value="<?= $value['id_staff'] ?>"><?= $value['nama_staff'] ?></option>
+                            <?php } ?>
+
+                        </select>
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -136,6 +145,10 @@
                         <label for="tgl_penilaian_ubah">Tanggal Penilaian</label>
                         <input type="text" class="form-control" name="tgl_penilaian_ubah" id="tgl_penilaian_ubah">
                     </div>
+                    <!-- <div class="form-group">
+                        <label for="nama_staff_ubah">Staff yang dinilai</label>
+                        <input type="text" class="form-control" name="nama_staff_ubah" id="nama_staff_ubah">
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -220,12 +233,15 @@
 
         $('.btn_kirim').click(function() {
             id_periode = $(this).data('idperiode');
-            // staff_id = $(this).data('staffid');
-            tgl_penilaian = $(this).data('tglpenilaian');
-            kirim(id_periode, tgl_penilaian)
+            staff_id = $(this).data('staffid');
+            kirim(id_periode, staff_id)
         })
 
     })
+
+    function hitung_nilaiAkhir() {
+        
+    }
 
     function hapus(id) {
         Swal.fire({
@@ -257,10 +273,10 @@
         })
     }
 
-    function kirim(id_periode,tgl_penilaian) {
+    function kirim(id_periode, staff_id) {
         Swal.fire({
             title: 'Apakah kamu yakin?',
-            text: "Form penilaian pegawai akan dikirim ke tabel penilaian",
+            text: "Data penilaian pegawai akan dikirim ke tabel penilaian",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -271,10 +287,10 @@
             if (result.isConfirmed) {
                 $.ajax({
                     method: 'POST',
-                    url: '<?= base_url('Periode_penilaian/tambah_detail_periode')  ?>',
+                    url: '<?= base_url('Periode_penilaian/tambah_penilaian')  ?>',
                     data: {
                         id_periode: id_periode,
-                        tgl_penilaian: tgl_penilaian,
+                        staff_id: staff_id,
                     },
                     dataType: 'json',
                     success: function(status) {

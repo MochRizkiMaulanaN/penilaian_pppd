@@ -46,9 +46,11 @@
                                         <th>NIP</th>
                                         <th>Jabatan</th>
                                         <th>Staff</th>
-                                        <th>Alamat</th>
-                                        <th>No Telp</th>
-                                        <th>Email</th>
+                                        <!-- <th>Alamat</th>
+                                        <th>No Telp</th> -->
+                                        <!-- <th>Email</th> -->
+                                        <th>Masa Akhir Kontrak</th>
+                                        <th>Status Pegawai</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -62,9 +64,17 @@
                                             <td><?= $value['nip_pegawai'] ?></td>
                                             <td><?= $value['nama_jabatan'] ?></td>
                                             <td><?= $value['nama_staff'] ?></td>
-                                            <td><?= $value['alamat'] ?></td>
+                                            <!-- <td><?= $value['alamat'] ?></td>
                                             <td><?= $value['no_telp'] ?></td>
-                                            <td><?= $value['email'] ?></td>
+                                            <td><?= $value['email'] ?></td> -->
+                                            <td><?= date('d F Y', strtotime($value['akhir_kontrak']))  ?></td>
+                                            <td>
+                                                <?php if ($value['status_pegawai'] == 1) { ?>
+                                                    <span class="badge badge-success">Aktif</span>
+                                                <?php } else { ?>
+                                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                                <?php } ?>
+                                            </td>
                                             <td>
                                                 <button class="btn btn-warning btn-sm btn_ubah" data-toggle="modal" data-target="#pegawai_modal_ubah" data-id="<?= $value['id_pegawai'] ?>"><i class="fas fa-solid fa-pencil-alt"></i></button>
 
@@ -109,6 +119,9 @@
                             <label for="nip_pegawai">NIP</label>
                             <input type="text" class="form-control" name="nip_pegawai" id="nip_pegawai">
                         </div>
+                    </div>
+
+                    <div class="row">
                         <div class="form-group col-6">
                             <label for="nama_jabatan">Jabatan</label>
                             <select class="select2 form-control" name="nama_jabatan" id="nama_jabatan">
@@ -119,6 +132,10 @@
                                 <?php }
                                 ?>
                             </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="masa_kontrak">Masa Akhir Kontrak</label>
+                            <input type="date" class="form-control" name="masa_kontrak" id="masa_kontrak">
                         </div>
                     </div>
 
@@ -186,11 +203,18 @@
                             <label for="nip_pegawai_ubah">NIP</label>
                             <input type="text" class="form-control" name="nip_pegawai_ubah" id="nip_pegawai_ubah">
                         </div>
+                    </div>
+
+                    <div class="row">
                         <div class="form-group col-6">
                             <label for="nama_jabatan_ubah">Jabatan</label>
                             <select class="select2 form-control" name="nama_jabatan_ubah" id="nama_jabatan_ubah">
-                                
+
                             </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="masa_kontrak_ubah">Masa Akhir Kontrak</label>
+                            <input type="date" class="form-control" name="masa_kontrak_ubah" id="masa_kontrak_ubah">
                         </div>
                     </div>
 
@@ -198,7 +222,7 @@
                         <div class="form-group col-6">
                             <label for="nama_staff_ubah">Staff</label>
                             <select class="select2 form-control" name="nama_staff_ubah" id="nama_staff_ubah">
-                                
+
                             </select>
                         </div>
                         <div class="form-group col-6">
@@ -215,6 +239,15 @@
                         <div class="form-group col-6">
                             <label for="email_pegawai_ubah">Email</label>
                             <input type="text" class="form-control" name="email_pegawai_ubah" id="email_pegawai_ubah">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="aktif_pegawai_ubah">Aktif</label>
+                            <div class="form-check">
+                                <input class="form-check-input" name="aktif_pegawai_ubah" id="aktif_pegawai_ubah" type="checkbox">
+                            </div>
                         </div>
                     </div>
 
@@ -267,6 +300,9 @@
                 nama_jabatan: {
                     required: true,
                 },
+                masa_kontrak: {
+                    required: true,
+                },
                 nama_staff: {
                     required: true,
                 },
@@ -294,6 +330,9 @@
                 nama_jabatan: {
                     required: "Silahkan pilih salah satu",
                 },
+                masa_kontrak: {
+                    required: "Silahkan masa akhir kontrak",
+                },
                 nama_staff: {
                     required: "Silahkan pilih salah satu",
                 },
@@ -317,6 +356,7 @@
                 email_pegawai = $('#email_pegawai').val()
                 alamat_pegawai = $('#alamat_pegawai').val()
                 nama_jabatan = $('#nama_jabatan').val()
+                masa_kontrak = $('#masa_kontrak').val()
                 nama_staff = $('#nama_staff').val()
                 no_telp = $('#no_telp').val()
 
@@ -330,6 +370,7 @@
                         email_pegawai: email_pegawai,
                         alamat_pegawai: alamat_pegawai,
                         nama_jabatan: nama_jabatan,
+                        masa_kontrak: masa_kontrak,
                         nama_staff: nama_staff,
                         no_telp: no_telp
                     },
@@ -367,6 +408,9 @@
                 nama_jabatan_ubah: {
                     required: true,
                 },
+                masa_kontrak_ubah: {
+                    required: true,
+                },
                 nama_staff_ubah: {
                     required: true,
                 },
@@ -394,6 +438,9 @@
                 nama_jabatan_ubah: {
                     required: "Silahkan pilih salah satu",
                 },
+                masa_kontrak_ubah: {
+                    required: "Silahkan masukkan masa akhir kontrak",
+                },
                 nama_staff_ubah: {
                     required: "Silahkan pilih salah satu",
                 },
@@ -418,8 +465,18 @@
                 email_pegawai = $('#email_pegawai_ubah').val()
                 alamat_pegawai = $('#alamat_pegawai_ubah').val()
                 nama_jabatan = $('#nama_jabatan_ubah').val()
+                masa_kontrak = $('#masa_kontrak_ubah').val()
                 nama_staff = $('#nama_staff_ubah').val()
                 no_telp = $('#no_telp_ubah').val()
+
+                if (document.getElementById("aktif_pegawai_ubah").checked == true) {
+                    status_pegawai = '1'
+                } else if (document.getElementById("aktif_pegawai_ubah").checked == false) {
+                    status_pegawai = '0'
+                } else {
+                    status_pegawai = $('#aktif_pegawai_ubah').val()
+                }
+
 
                 $.ajax({
                     method: 'post',
@@ -431,8 +488,10 @@
                         email_pegawai: email_pegawai,
                         alamat_pegawai: alamat_pegawai,
                         nama_jabatan: nama_jabatan,
+                        masa_kontrak: masa_kontrak,
                         nama_staff: nama_staff,
-                        no_telp: no_telp
+                        no_telp: no_telp,
+                        status_pegawai: status_pegawai,
                     },
                     dataType: 'json',
                     success: function(status) {
@@ -446,7 +505,7 @@
 
         });
 
-        
+
 
         $('.btn_hapus').click(function() {
             id = $(this).data('id');
@@ -489,6 +548,8 @@
                     $('#email_pegawai_ubah').val(data.email_pegawai)
                     $('#no_telp_ubah').val(data.no_telp)
                     $('#alamat_pegawai_ubah').val(data.alamat_pegawai)
+                    $('#masa_kontrak_ubah').val(data.masa_kontrak)
+                    $('#aktif_pegawai_ubah').val(data.status_pegawai)
                     id_jabatan = data.id_jabatan
                     id_staff = data.id_staff
 
