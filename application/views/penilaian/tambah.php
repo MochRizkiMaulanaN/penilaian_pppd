@@ -40,12 +40,13 @@
                                         <tr>
                                             <th class="text-white" bgcolor="#8496a9" colspan="2"><?= $value['nama_kriteria']; ?></th>
                                             <?php foreach ($subkriteria as $key => $subvalue) {
-                                                if ($subvalue['id_kriteria'] == $value['id_kriteria']) { ?>
+                                                if ($subvalue['kriteria_id'] == $value['id_kriteria']) { ?>
 
                                         <tr>
                                             <td><?= $subvalue['nama_subkriteria'] ?></td>
                                             <td>
                                                 <input type="hidden" id="subkriteria<?= $subvalue['id_subkriteria'] ?>" value="<?= $subvalue['id_subkriteria'] ?>">
+                                                <input type="hidden" id="kriteria<?= $value['id_kriteria'] ?>" value="<?= $value['id_kriteria'] ?>">
                                                 <select name="" id="nilaisub<?= $subvalue['id_subkriteria'] ?>" class="form-control">
                                                     <option value="5">5 - Sangat Baik</option>
                                                     <option value="4">4 - Baik</option>
@@ -113,6 +114,9 @@
                 pegawai_id = $('#pegawai_id').val()
                 staff_id = $('#staff_id').val()
                 penilaian_id = $('#penilaian_id').val()
+                kriteria1 = $('#kriteria1').val()
+                kriteria2 = $('#kriteria2').val()
+                kriteria3 = $('#kriteria3').val()
                 subkriteria1 = $('#subkriteria1').val()
                 subkriteria2 = $('#subkriteria2').val()
                 subkriteria3 = $('#subkriteria3').val()

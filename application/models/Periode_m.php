@@ -3,6 +3,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Periode_m extends CI_Model
 {
+    public function tampil_periode_tahun()
+    {
+        $this->db->select('*');
+        $this->db->from('tb_periode_penilaian pp');
+        $this->db->order_by('tgl_penilaian', 'desc');
+        $this->db->group_by('Year("tgl_penilaian")');
+        return $this->db->get()->result_array();
+    }
+
     public function tampil_periode()
     {
         $this->db->select('*');
@@ -23,19 +32,6 @@ class Periode_m extends CI_Model
 
     public function tambah_periode($tgl_penilaian)
     {
-        // $staff = $this->db->get('tb_staff')->result_array();
-
-        // $data_periode = [];
-        // foreach ($staff as $key => $value) {
-        //     $data = [
-        //         'tgl_penilaian' => $tgl_penilaian,
-        //         'staff_id' => $value['id_staff'],
-        //         'status' => 'belum'
-        //     ];
-
-        //     array_push($data_periode, $data);
-        // }
-        // $this->db->insert_batch('tb_periode_penilaian', $data_periode);
 
         $data = [
             'tgl_penilaian' => $tgl_penilaian,
@@ -164,5 +160,108 @@ class Periode_m extends CI_Model
             $this->email->print_debugger();
             die;
         }
+    }
+
+    public function hitung_nilai_akhir($id_periode)
+    {
+
+        //ambil hanya tahun nya saja
+        $tanggal = $this->db->query("SELECT YEAR(tgl_penilaian) AS tahun FROM tb_periode_penilaian WHERE id_periode =" . $id_periode)->row_array();
+        $tahun = $tanggal['tahun'];
+
+        $jumlah_vektors = $this->db->query("SELECT SUM(vektor_s) AS jumlah FROM tb_hasil_penilaian WHERE periode_id =" . $id_periode)->row_array();
+
+        $subkriteria = $this->db->get('tb_subkriteria')->result_array();
+
+        $vektors_pg = 1;
+        foreach ($subkriteria as $key => $value) {
+            $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
+        }
+
+        $total_vektors = $jumlah_vektors['jumlah'] + $vektors_pg;
+
+        $passing_grade = $vektors_pg / $total_vektors;
+
+        //hitung vektor v dari masing - masing pegawai
+        $hasil = $this->db->get_where('tb_hasil_penilaian', ['periode_id' => $id_periode])->result_array();
+
+
+        foreach ($hasil as $key => $value) {
+            $pegawai_id = $value['pegawai_id'];
+            $vektor_v = $value['vektor_s'] / $total_vektors;
+
+            //update nilai dan passing grade di tabel penilaian 
+            $this->db->where('periode_id', $id_periode);
+            $this->db->where('pegawai_id', $pegawai_id);
+            $this->db->update('tb_penilaian', ['nilai' => $vektor_v, 'passing_grade' => $passing_grade ]);
+
+            //update nilai vektor v
+            $this->db->where('periode_id', $id_periode);
+            $this->db->where('pegawai_id', $pegawai_id);
+            $this->db->update('tb_hasil_penilaian', ['vektor_v' => $vektor_v]);
+
+            //cek ke tabel tb_nilai_akhir
+            $this->db->select('*');
+            $this->db->from('tb_nilai_akhir');
+            $this->db->where('tahun', $tahun);
+            $this->db->where('pegawai_id', $pegawai_id);
+            $cek_data = $this->db->get()->row_array();
+
+            if ($cek_data) {
+                // $periode_pertama = $cek_data['periode_pertama'];
+                $periode_kedua = $cek_data['periode_kedua'];
+                $periode_ketiga = $cek_data['periode_ketiga'];
+                // $periode_keempat = $cek_data['periode_keempat'];
+                if ($periode_kedua == 0) {
+                    // var_dump($pegawai_id, $tahun);
+                    $data = [
+                        'periode_kedua' => $vektor_v
+                    ];
+                    $this->db->where('pegawai_id', $pegawai_id);
+                    $this->db->where('tahun', $tahun);
+                    $this->db->update('tb_nilai_akhir', $data);
+                } else {
+                    if ($periode_ketiga == 0) {
+                        $data = [
+                            'periode_ketiga' => $vektor_v
+                        ];
+                        $this->db->where('pegawai_id', $pegawai_id);
+                        $this->db->where('tahun', $tahun);
+                        $this->db->update('tb_nilai_akhir', $data);
+                    } else {
+                        $data = [
+                            'periode_keempat' => $vektor_v
+                        ];
+                        $this->db->where('pegawai_id', $pegawai_id);
+                        $this->db->where('tahun', $tahun);
+                        $this->db->update('tb_nilai_akhir', $data);
+                    }
+                }
+            } else {
+                $data = [
+                    'pegawai_id' => $pegawai_id,
+                    'tahun' => $tahun,
+                    'periode_pertama' => $vektor_v,
+                    'periode_kedua' => 0,
+                    'periode_ketiga' => 0,
+                    'periode_keempat' => 0
+                ];
+                $this->db->insert('tb_nilai_akhir', $data);
+            }
+        }
+
+        //update status periode penilaian di tabel periode penilaian
+        $this->db->update('tb_periode_penilaian', ['status' => 'selesai'], ['id_periode' => $id_periode]);
+
+
+        //cek keseluruhan status periode penilaian
+        // $this->db->from('tb_periode_penilaian');
+        // $this->db->where('Year("tgl_penilaian")', $tahun);
+        // $this->db->where('status', 'selesai');
+        // $cek_data = $this->db->get();
+        // if ($cek_data->num_rows() == 4) {
+        //     var_dump('penilaian di tahun' . $tahun . 'sudah dilakukan');
+        //     die;
+        // }
     }
 }

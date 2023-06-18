@@ -15,10 +15,13 @@ class Subkriteria_m extends CI_Model
         $id_kriteria = $this->input->post('id_kriteria');
         $passing_grade = $this->input->post('passing_grade');
 
+        $ambil_bobot = $this->db->get_where('tb_kriteria', ['id_kriteria' => $id_kriteria])->row_array();
+
         $data = [
             'id_kriteria' => $id_kriteria,
             'nama_subkriteria' => $nama_subkriteria,
-            'passing_grade' => $passing_grade
+            'passing_grade' => $passing_grade,
+            'bobot_subkriteria' => $ambil_bobot['bobot_kriteria'],
         ];
 
         $this->db->insert('tb_subkriteria', $data);

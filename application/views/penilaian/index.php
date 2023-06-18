@@ -66,6 +66,7 @@
 
                                                 <?php if ($value['status'] == 1) { ?>
                                                     <a href="<?= base_url('Penilaian/ubah_form/' . $value['id_penilaian']) ?>" class="btn btn-warning btn-sm btn_ubah"><i class="fas fa-solid fa-pencil-alt"></i></a>
+
                                                 <?php } else { ?>
                                                     <a href="<?= base_url('Penilaian/tambah_form/' . $value['id_penilaian']) ?>" class="btn btn-primary btn-sm btn_tambah"><i class="fas fa-solid fa-plus"></i></a>
                                                 <?php } ?>
@@ -307,84 +308,11 @@
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
-            location.href = '<?= base_url('Pengguna') ?>';
+            location.href = '<?= base_url('Penilaian') ?>';
         })
 
     }
 
-    function tampil_pengguna_id(id) {
-        $.ajax({
-            method: 'POST',
-            url: '<?= base_url('Pengguna/tampil_pengguna_id')  ?>',
-            data: {
-                id_pengguna: id,
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (data.status == 1) {
-                    $('#id_pengguna_ubah').val(data.id_pengguna)
-                    $('#nama_pengguna_ubah').val(data.nama_pengguna)
-                    $('#nip_pengguna_ubah').val(data.nip_pengguna)
-                    $('#email_pengguna_ubah').val(data.email_pengguna)
-                    id_role = data.role_pengguna
-                    aktif = data.aktif_pengguna
-                    $('#aktif_pengguna_ubah').val(aktif)
 
 
-                    //tampilkan data role
-                    data_role = data.role
-
-                    baris = '<option value="" disabled>Pilih salah satu</option>'
-                    for (let i = 0; i < data_role.length; i++) {
-                        const role = data_role[i];
-                        if (id_role === role['id_role']) {
-                            baris += '<option value="' + role['id_role'] + '" selected>' + role['nama_role'] + '</option>'
-                        } else {
-                            baris += '<option value="' + role['id_role'] + '">' + role['nama_role'] + '</option>'
-                        }
-
-                    }
-                    $('#role_pengguna_ubah').html(baris)
-
-                    if (aktif == '1') {
-                        $('#aktif_pengguna_ubah').attr('checked', true)
-                    } else {
-                        $('#aktif_pengguna_ubah').removeAttr('checked')
-                    }
-
-                }
-            }
-
-        })
-    }
-
-    function hapus(id) {
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "ingin menghapus data ini",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    method: 'POST',
-                    url: '<?= base_url('Pengguna/hapus')  ?>',
-                    data: {
-                        id_pengguna: id,
-                    },
-                    dataType: 'json',
-                    success: function(status) {
-                        if (status == 1) {
-                            swall('Dihapus')
-                        }
-                    }
-
-                })
-            }
-        })
-    }
 </script>

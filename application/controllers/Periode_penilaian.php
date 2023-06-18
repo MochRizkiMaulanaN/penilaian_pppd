@@ -37,9 +37,9 @@ class Periode_penilaian extends CI_Controller
     {
         $data['staff'] = $this->Staff_m->tampil_staff();
         $data['detail_periode'] = $this->Periode_m->tampil_detail_periode($id_periode);
-        // $data['hapus_perusahaan'] = $this->Periode_penilaian_model->tampil_groupby();
         // $data['periode'] = $this->Periode_penilaian_model->tampil_periode();
         $data['title'] = 'Halaman Detail Periode Penilaian';
+        $data['id_periode'] = $id_periode;
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/navbar');
@@ -81,14 +81,37 @@ class Periode_penilaian extends CI_Controller
         }
     }
 
-    // public function tambah_penilaian()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         $this->Periode_m->tambah_penilaian();
-    //         $status = 1;
-    //         echo json_encode($status);
-    //     }
-    // }
+    public function hitung_nilaiAkhir()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_periode = $this->input->post('id_periode');
+            $this->Periode_m->hitung_nilai_akhir($id_periode);
+
+            $status = 1;
+            echo json_encode($status);
+        }
+    }
+
+    public function detail_penilaian_staff($id_periode, $id_staff)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_penilaian pn');
+        $this->db->join('tb_pegawai pg', 'pn.pegawai_id = pg.id_pegawai');
+        $this->db->join('tb_jabatan jb', 'pg.jabatan_id = jb.id_jabatan');
+        $this->db->where('pn.staff_id', $id_staff);
+        $this->db->where('periode_id', $id_periode);
+        $data['detail_penilaian'] = $this->db->get()->result_array();
+        // $data['periode'] = $this->Periode_penilaian_model->tampil_periode();
+        $data['title'] = 'Halaman Detail Penilaian Staff';
+        $data['id_periode'] = $id_periode;
+        $data['id_staff'] = $id_staff;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('periode_penilaian/detail_penilaian_staff', $data);
+        $this->load->view('templates/footer');
+    }
 
     public function hapus()
     {

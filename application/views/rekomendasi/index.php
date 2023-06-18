@@ -31,13 +31,14 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
+                            <?php
+                            $now = date('Y'); ?>
                             Tahun :
                             <select name="" id="">
-                                <option value="">2023</option>
-                                <option value="">2022</option>
-                                <option value="">2021</option>
-                                <option value="">2020</option>
-                                <option value="">2019</option>
+                                <?php for ($i = 2019; $i <= $now; $i++) { ?>
+                                    <option value="<?= $i ?>"><?= $i ?></option>
+                                <?php }
+                                ?>
                             </select>
                         </div>
                         <!-- /.card-header -->
@@ -48,7 +49,6 @@
                                         <th>#</th>
                                         <th>NIP</th>
                                         <th>Nama Pegawai</th>
-                                        <th>Jabatan</th>
                                         <th>Nilai Akhir</th>
                                         <th>Keterangan</th>
                                         <th>Status</th>
@@ -56,7 +56,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>

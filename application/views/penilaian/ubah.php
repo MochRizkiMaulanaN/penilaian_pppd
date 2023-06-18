@@ -34,31 +34,29 @@
                                 <thead>
                                     <input type="hidden" id="penilaian_id" value="<?= $pegawai['id_penilaian'] ?>">
                                     <input type="hidden" id="pegawai_id" value="<?= $pegawai['pegawai_id'] ?>">
-                                    <?php foreach ($kriteria as $key => $value) { ?>
-                                        <tr>
-                                            <th class="text-white" bgcolor="#8496a9" colspan="2"><?= $value['nama_kriteria']; ?></th>
-                                            <?php foreach ($subkriteria as $key => $subvalue) {
-                                                if ($value['id_kriteria'] == $subvalue['id_kriteria']) { ?>
+                                    <?php
+                                    foreach ($detail_penilaian as $key => $dpvalue) { ?>
 
                                         <tr>
-                                            <td><?= $subvalue['nama_subkriteria'] ?></td>
+                                            <th class="text-white" bgcolor="#8496a9" colspan="2"><?= $dpvalue['nama_kriteria']; ?></th>
+                                        </tr>
+                                        <tr>
                                             <td>
-                                                <input type="text" id="subkriteria<?= $subvalue['id_subkriteria'] ?>" value="<?= $subvalue['id_subkriteria'] ?>">
-                                                <select name="" id="nilaisub<?= $subvalue['id_subkriteria'] ?>" class="form-control">
-                                                <?php foreach ($level_nilai as $key => $value) { ?>
-                                                    <option value="<?= $value['nilai_level'] ?>"><?= $value['nilai_level'] ?> - <?= $value['nama_level'] ?></option>
-                                                <?php } ?>
-                                                    
-                                            
+                                                <?= $dpvalue['nama_subkriteria'] ?>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" id="subkriteria<?= $dpvalue['subkriteria_id'] ?>" value="<?= $dpvalue['subkriteria_id'] ?>">
+                                                <select name="" id="nilaisub<?= $dpvalue['subkriteria_id'] ?>" class="form-control">
+                                                    <?php foreach ($level_nilai as $key => $value) { ?>
+                                                        <option value="<?= $value['nilai_level'] ?>" <?= $dpvalue['nilai'] == $value['nilai_level'] ? 'selected' : null  ?>><?= $value['nilai_level'] ?> - <?= $value['nama_level'] ?></option>
+                                                    <?php } ?>
+                                                    <?php
+                                                    ?>
+
                                                 </select>
                                             </td>
                                         </tr>
-                                        </tr>
-                                <?php }
-                                            } ?>
-                                </tr>
-                            <?php } ?>
-
+                                    <?php } ?>
                                 </thead>
                                 <tbody>
 
@@ -95,10 +93,10 @@
 
     }
 
-    function tambah() {
+    function ubah() {
         Swal.fire({
             title: 'Apakah kamu yakin?',
-            text: "sudah selesai dan menyimpan data penilain ini",
+            text: "sudah selesai dan ingin menyimpan data penilain ini",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

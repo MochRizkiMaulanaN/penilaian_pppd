@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Detail Penilaian</h1>
+                    <h1 class="m-0">Detail Penilaian Staff</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Detail Penilaian</li>
+                        <li class="breadcrumb-item active">Detail Penilaian Staff</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,25 +31,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <?php
-                            $this->db->from('tb_detail_periode');
-                            $this->db->where('periode_id', $id_periode);
-                            $this->db->where('status', 'proses penilaian');
-                            $cek = $this->db->get()->result_array();
-                            if (!$cek) {
-
-                                $this->db->from('tb_periode_penilaian');
-                                $this->db->where('id_periode', $id_periode);
-                                $this->db->where('status', 'selesai');
-                                $cek2 = $this->db->get()->result_array();
-
-                                if (!$cek2) { ?>
-                                    <button class="btn btn-primary btn_hitung" data-idperiode="<?= $id_periode ?>">
-                                        Hitung Nilai Akhir
-                                    </button>
-                            <?php }
-                            }
-                            ?>
+                            <a href="<?= base_url('Periode_penilaian/detail_periode/' . $id_periode) ?>" class="btn btn-warning text-white">kembali</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -57,34 +39,27 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tanggal Penilaian</th>
-                                        <th>Nama Penilai</th>
-                                        <th>Staff yang dinilai</th>
-                                        <th>Status</th>
+                                        <th>NIP</th>
+                                        <th>Nama Pegawai</th>
+                                        <th>Jabatan</th>
+                                        <th>Nilai</th>
+                                        <th>Passing Grade</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $no = 1;
-                                    foreach ($detail_periode as $key => $value) { ?>
+                                    foreach ($detail_penilaian as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
-                                            <td><?= date('d F Y', strtotime($value['tgl_penilaian']))  ?></td>
-                                            <td><?= $value['nama_penilai'] ?></td>
-                                            <td><?= $value['nama_staff'] ?></td>
+                                            <td><?= $value['nip_pegawai'] ?></td>
+                                            <td><?= $value['nama_pegawai'] ?></td>
+                                            <td><?= $value['nama_jabatan'] ?></td>
+                                            <td><?= $value['nilai'] ?></td>
+                                            <td><?= $value['passing_grade'] ?></td>
                                             <td>
-                                                <?php if ($value['status'] == 'proses penilaian') { ?>
-                                                    <span class="badge badge-success">proses penilaian</span>
-                                                <?php } else { ?>
-                                                    <span class="badge badge-primary">selesai</span>
-                                                <?php } ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($value['status'] == 'selesai') { ?>
-                                                    <a href="<?= base_url('Periode_penilaian/detail_penilaian_staff/' . $value["periode_id"] . '/' . $value["staff_id"]) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
-                                                <?php } ?>
-
+                                                <a href="<?= base_url('Periode_penilaian/detail_penilaian_pegawai/' . $value["id_penilaian"] . '/' . $value["pegawai_id"]) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     <?php }
