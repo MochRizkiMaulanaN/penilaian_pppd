@@ -6,7 +6,7 @@ class Subkriteria_m extends CI_Model
     public function tampil_subkriteria($id_kriteria)
     {
 
-        return $this->db->get_where('tb_subkriteria',['id_kriteria' => $id_kriteria])->result_array();
+        return $this->db->get_where('tb_subkriteria',['kriteria_id' => $id_kriteria])->result_array();
     }
 
     public function tambah_subkriteria()
@@ -18,7 +18,7 @@ class Subkriteria_m extends CI_Model
         $ambil_bobot = $this->db->get_where('tb_kriteria', ['id_kriteria' => $id_kriteria])->row_array();
 
         $data = [
-            'id_kriteria' => $id_kriteria,
+            'kriteria_id' => $id_kriteria,
             'nama_subkriteria' => $nama_subkriteria,
             'passing_grade' => $passing_grade,
             'bobot_subkriteria' => $ambil_bobot['bobot_kriteria'],

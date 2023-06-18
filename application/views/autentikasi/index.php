@@ -41,9 +41,10 @@
                 <a href="forgot-password.html">Lupa password ?</a>
             </p>
             <hr>
-            <p class="mb-0 text-center">
-                <a href="<?= base_url('Autentikasi/registrasi') ?>">Registrasi</a>
-            </p>
+            <!-- <p class="mb-0 text-center">
+                <a href="<?php //base_url('Autentikasi/registrasi') 
+                            ?>">Registrasi</a>
+            </p> -->
         </div>
         <!-- /.login-card-body -->
     </div>

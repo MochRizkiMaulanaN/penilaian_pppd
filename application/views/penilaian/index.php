@@ -25,9 +25,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_pengguna">
-                                <i class="fa fa-plus"></i> Tambah Data
-                            </button>
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -312,7 +310,4 @@
         })
 
     }
-
-
-
 </script>
