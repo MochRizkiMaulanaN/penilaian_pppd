@@ -81,15 +81,18 @@ class Periode_penilaian extends CI_Controller
         }
     }
 
-    public function hitung_nilaiAkhir()
+    public function hitung_nilaiAkhir($id_periode)
     {
-        if ($this->input->is_ajax_request()) {
-            $id_periode = $this->input->post('id_periode');
-            $this->Periode_m->hitung_nilai_akhir($id_periode);
-
-            $status = 1;
-            echo json_encode($status);
-        }
+        // if ($this->input->is_ajax_request()) {
+        //     $id_periode = $this->input->post('id_periode');
+        $this->Periode_m->hitung_nilai_akhir($id_periode);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+               Penilaian pegawai berhasil dihitung
+              </div>');
+        redirect('Periode_penilaian');
+        //     $status = 1;
+        //     echo json_encode($status);
+        // }
     }
 
     public function detail_penilaian_staff($id_periode, $id_staff)

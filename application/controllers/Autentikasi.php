@@ -231,7 +231,7 @@ class Autentikasi extends CI_Controller
 
 	public function keluar()
 	{
-		$this->session->unset_userdata('ni_pengguna');
+		$this->session->unset_userdata('nip_pengguna');
 		$this->session->unset_userdata('nama_pengguna');
 		$this->session->unset_userdata('role_id');
 		$this->session->unset_userdata('nama_role');

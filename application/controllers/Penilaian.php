@@ -23,7 +23,7 @@ class Penilaian extends CI_Controller
         $staff = $this->db->get_where('tb_staff', ['nip_staff' => $nip_pengguna])->row_array();
 
         $data['penilaian'] = $this->Penilaian_m->tampil_penilaian($staff['id_staff']);
-
+        $data['staff_id'] = $staff['id_staff'];
         $data['title'] = 'Halaman Penilaian';
 
         $this->load->view('templates/header', $data);
@@ -55,7 +55,7 @@ class Penilaian extends CI_Controller
         $data['pegawai'] = $this->Penilaian_m->pegawai_idpenilaian($id_penilaian);
         $data['kriteria'] = $this->Kriteria_m->tampil_kriteria();
         $data['subkriteria'] = $this->db->get('tb_subkriteria')->result_array();
-    
+
         $data['detail_penilaian'] = $this->Penilaian_m->detail_penilaianID($id_penilaian);
         $data['level_nilai'] = $this->db->get('tb_level_nilai')->result_array();
 
@@ -77,15 +77,31 @@ class Penilaian extends CI_Controller
         }
     }
 
-    public function edit_penilaian()
-    {
-    }
-
-    public function hitung()
+    public function ubah()
     {
         if ($this->input->is_ajax_request()) {
-            $this->Penilaian_m->hitung_nilai_vektors();
+            $this->Penilaian_m->ubah_penilaian();
             $status = 1;
+            echo json_encode($status);
+        }
+    }
+
+    public function selesai_penilaian()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_staff = $this->input->post('id_staff');
+
+            $this->db->from('tb_penilaian');
+            $this->db->where('staff_id', $id_staff);
+            $this->db->where('status', 0);
+            $cek_status = $this->db->get()->result_array();
+    
+            if ($cek_status) {
+                $status = 0; 
+            }else {
+                $this->Penilaian_m->hitung_nilai_vektors($id_staff);
+                $status = 1;
+            }
             echo json_encode($status);
         }
     }

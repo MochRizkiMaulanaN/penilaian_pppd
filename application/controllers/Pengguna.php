@@ -61,6 +61,29 @@ class Pengguna extends CI_Controller
         }
     }
 
+    public function tampil_staff_id()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_role = $this->input->post('id_role');
+            if ($id_role == 3) {
+                $data = [
+                    'staff' => $this->db->get('tb_staff')->result_array(),
+                    'id_role' => $id_role
+                ];
+            } elseif ($id_role == 4) {
+                $data = [
+                    'pegawai' => $this->db->get('tb_pegawai')->result_array(),
+                    'id_role' => $id_role
+                ];
+            } else {
+                $data['id_role'] = $id_role;
+            }
+
+
+            echo json_encode($data);
+        }
+    }
+
     public function ubah()
     {
         if ($this->input->is_ajax_request()) {

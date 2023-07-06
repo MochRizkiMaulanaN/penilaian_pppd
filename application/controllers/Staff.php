@@ -47,6 +47,7 @@ class Staff extends CI_Controller
                 'nama_penilai' => $staff['nama_penilai'],
                 'nama_staff' => $staff['nama_staff'],
                 'nip_staff' => $staff['nip_staff'],
+                'jabatan_staff' => $staff['jabatan_staff'],
                 'status' => 1
             ];
             echo json_encode($data);

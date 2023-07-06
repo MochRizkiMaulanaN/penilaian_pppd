@@ -70,7 +70,7 @@
                                             <td><?= date('d F Y', strtotime($value['akhir_kontrak']))  ?></td>
                                             <td>
                                                 <?php if ($value['status_pegawai'] == 1) { ?>
-                                                    <span class="badge badge-success">Aktif</span>
+                                                    <span class="badge badge-primary">Aktif</span>
                                                 <?php } else { ?>
                                                     <span class="badge badge-danger">Tidak Aktif</span>
                                                 <?php } ?>
@@ -470,9 +470,9 @@
                 no_telp = $('#no_telp_ubah').val()
 
                 if (document.getElementById("aktif_pegawai_ubah").checked == true) {
-                    status_pegawai = '1'
+                    status_pegawai = 1
                 } else if (document.getElementById("aktif_pegawai_ubah").checked == false) {
-                    status_pegawai = '0'
+                    status_pegawai = 0
                 } else {
                     status_pegawai = $('#aktif_pegawai_ubah').val()
                 }
@@ -549,10 +549,16 @@
                     $('#no_telp_ubah').val(data.no_telp)
                     $('#alamat_pegawai_ubah').val(data.alamat_pegawai)
                     $('#masa_kontrak_ubah').val(data.masa_kontrak)
+                    aktif = data.status_pegawai
                     $('#aktif_pegawai_ubah').val(data.status_pegawai)
                     id_jabatan = data.id_jabatan
                     id_staff = data.id_staff
 
+                    if (aktif == 1) {
+                        $('#aktif_pegawai_ubah').attr('checked', true)
+                    } else {
+                        $('#aktif_pegawai_ubah').removeAttr('checked')
+                    }
 
                     //tampilkan data jabatan
                     data_jabatan = data.nama_jabatan

@@ -25,8 +25,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header bg-primary">
-                            <h7><?= $pegawai['nip_pegawai'] ?> - <?= $pegawai['nama_pegawai'] ?> (<?= $pegawai['nama_staff'] ?>) </h7>
+                        <div class="card-header">
+                            <h7><?= $pegawai['nip_pegawai'] ?> - <?= $pegawai['nama_pegawai'] ?></h7>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -38,7 +38,7 @@
                                     <input type="hidden" id="pegawai_id" value="<?= $pegawai['pegawai_id'] ?>">
                                     <?php foreach ($kriteria as $key => $value) { ?>
                                         <tr>
-                                            <th class="text-white" bgcolor="#8496a9" colspan="2"><?= $value['nama_kriteria']; ?></th>
+                                            <th class="text-white bg-dark" colspan="2"><?= $value['nama_kriteria']; ?></th>
                                             <?php foreach ($subkriteria as $key => $subvalue) {
                                                 if ($subvalue['kriteria_id'] == $value['id_kriteria']) { ?>
 

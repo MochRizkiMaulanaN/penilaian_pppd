@@ -42,8 +42,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Nama Penilai</th>
                                         <th>NIP</th>
+                                        <th>Nama Penilai</th>
+                                        <th>Jabatan</th>
                                         <th>Nama Staff</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -54,8 +55,9 @@
                                     foreach ($staff as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $value['nama_penilai'] ?></td>
                                             <td><?= $value['nip_staff'] ?></td>
+                                            <td><?= $value['nama_penilai'] ?></td>
+                                            <td><?= $value['jabatan_staff'] ?></td>
                                             <td><?= $value['nama_staff'] ?></td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_staff'] ?>"><i class="fas fa-solid fa-trash"></i></button>
@@ -101,6 +103,10 @@
                         <input type="text" class="form-control" name="nip_staff" id="nip_staff">
                     </div>
                     <div class="form-group">
+                        <label for="jabatan_staff">Jabatan</label>
+                        <input type="text" class="form-control" name="jabatan_staff" id="jabatan_staff">
+                    </div>
+                    <div class="form-group">
                         <label for="nama_staff">Nama Staff</label>
                         <input type="text" class="form-control" name="nama_staff" id="nama_staff">
                     </div>
@@ -137,6 +143,10 @@
                     <div class="form-group">
                         <label for="nip_staff_ubah">NIP</label>
                         <input type="text" class="form-control" name="nip_staff_ubah" id="nip_staff_ubah">
+                    </div>
+                    <div class="form-group">
+                        <label for="jabatan_staff_ubah">Jabatan</label>
+                        <input type="text" class="form-control" name="jabatan_staff_ubah" id="jabatan_staff_ubah">
                     </div>
                     <div class="form-group">
                         <label for="nama_staff_ubah">Nama Staff</label>
@@ -180,6 +190,10 @@
                     required: true,
                     number: true,
                     minlength: 8,
+                },
+
+                jabatan_staff: {
+                    required: true,
                 }
 
             },
@@ -194,6 +208,9 @@
                     required: "Silahkan masukkan NIP",
                     number: "Silahkan masukkan nip berupa angka",
                     minlength: "Silahkan masukkan nip minimal 8 angka",
+                },
+                jabatan_staff: {
+                    required: "Silahkan masukkan nama jabatan",
                 }
 
             },
@@ -213,6 +230,7 @@
                 nama_staff = $('#nama_staff').val()
                 nama_penilai = $('#nama_penilai').val()
                 nip_staff = $('#nip_staff').val()
+                jabatan_staff = $('#jabatan_staff').val()
 
                 $.ajax({
                     method: 'post',
@@ -221,6 +239,7 @@
                         nama_staff: nama_staff,
                         nama_penilai: nama_penilai,
                         nip_staff: nip_staff,
+                        jabatan_staff: jabatan_staff,
                     },
                     dataType: 'json',
                     success: function(status) {
@@ -245,6 +264,9 @@
                     required: true,
                     number: true,
                     minlength: 8,
+                },
+                jabatan_staff_ubah: {
+                    required: true,
                 }
 
             },
@@ -259,6 +281,10 @@
                     required: "Silahkan masukkan NIP",
                     number: "Silahkan masukkan nip berupa angka",
                     minlength: "Silahkan masukkan nip minimal 8 angka",
+                },
+                jabatan_staff_ubah: {
+                    required: "Silahkan masukkan nama jabatan",
+                
                 }
 
             },
@@ -279,6 +305,7 @@
                 nama_staff = $('#nama_staff_ubah').val()
                 nama_penilai = $('#nama_penilai_ubah').val()
                 nip_staff = $('#nip_staff_ubah').val()
+                jabatan_staff = $('#jabatan_staff_ubah').val()
 
                 $.ajax({
                     method: 'post',
@@ -288,6 +315,7 @@
                         nama_staff: nama_staff,
                         nama_penilai: nama_penilai,
                         nip_staff: nip_staff,
+                        jabatan_staff: jabatan_staff,
                     },
                     dataType: 'json',
                     success: function(status) {
@@ -340,6 +368,7 @@
                     $('#id_staff_ubah').val(data.id_staff)
                     $('#nama_staff_ubah').val(data.nama_staff)
                     $('#nip_staff_ubah').val(data.nip_staff)
+                    $('#jabatan_staff_ubah').val(data.jabatan_staff)
                     $('#nama_penilai_ubah').val(data.nama_penilai)
 
                 }

@@ -103,8 +103,19 @@
             <div class="modal-body">
                 <form id="tambah_pengguna">
                     <div class="form-group">
+                        <label for="role_pengguna">Role</label>
+                        <select class="select2 form-control" name="role_pengguna" id="role_pengguna">
+                            <option value="">Pilih salah satu</option>
+                            <?php
+                            foreach ($role as $key => $value) { ?>
+                                <option value="<?= $value['id_role'] ?>"><?= $value['nama_role'] ?></option>
+                            <?php }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="nama_pengguna">Nama</label>
-                        <input type="text" class="form-control" name="nama_pengguna" id="nama_pengguna">
+                        <input type="text" class="form-control nama_pengguna_input" name="nama_pengguna" id="nama_pengguna">
                     </div>
                     <div class="form-group">
                         <label for="nip_pengguna">NIP</label>
@@ -116,17 +127,6 @@
                         <input type="text" class="form-control" name="email_pengguna" id="email_pengguna">
                     </div>
 
-                    <div class="form-group">
-                        <label for="role_pengguna">Role</label>
-                        <select class="select2 form-control" name="role_pengguna" id="role_pengguna">
-                            <option value="">Pilih salah satu</option>
-                            <?php
-                            foreach ($role as $key => $value) { ?>
-                                <option value="<?= $value['id_role'] ?>"><?= $value['nama_role'] ?></option>
-                            <?php }
-                            ?>
-                        </select>
-                    </div>
                     <div class="row">
                         <div class="form-group col-6">
                             <label for="password">Password</label>
@@ -226,7 +226,7 @@
                     required: true,
                     number: true,
                     minlength: 8
-                  
+
                 },
                 email_pengguna: {
                     required: true,
@@ -250,10 +250,10 @@
                 },
                 nip_pengguna: {
                     required: "Silahkan masukkan NIP",
-                    number : "Silahkan masukkan angka",
-                    minlength : "Silahkan masukkan minimal 8 angka"
-                   
-                    
+                    number: "Silahkan masukkan angka",
+                    minlength: "Silahkan masukkan minimal 8 angka"
+
+
                 },
                 email_pengguna: {
                     required: "Silahkan masukkan email pengguna",
@@ -324,7 +324,7 @@
                     required: true,
                     number: true,
                     minlength: 8
-                    
+
                 },
                 role_pengguna_ubah: {
                     required: true
@@ -337,10 +337,10 @@
                 },
                 nip_pengguna_ubah: {
                     required: "Silahkan masukkan NIP",
-                    number : "Silahkan masukkan angka",
-                    minlength : "Silahkan masukkan minimal 8 angka"
-                   
-                    
+                    number: "Silahkan masukkan angka",
+                    minlength: "Silahkan masukkan minimal 8 angka"
+
+
                 },
                 email_pengguna_ubah: {
                     required: "Silahkan masukkan email pengguna",
@@ -413,7 +413,49 @@
 
         })
 
+        $('#role_pengguna_1').change(function() {
+            id_role = $(this).val()
+            $.ajax({
+                method: 'POST',
+                url: '<?= base_url('Pengguna/tampil_staff_id')  ?>',
+                data: {
+                    id_role: id_role,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.id_role == 1) {
+                        $('#nama_pengguna_input').css("display","block")
+                        $('#nama_pengguna_select').css("display","none")
+                    } else if (data.id_role == 2) {
+                        $('#nama_pengguna_input').css("display","block")
+                        $('#nama_pengguna_select').css("display","none")
+                    } else if (data.id_role == 3) {
+                        $('#nama_pengguna_input').css("display","none")
+                        // $('#nip_pengguna').val(data.nip_staff)
+
+                        staff = data.staff
+                        baris = '<label for="nama_pengguna">Nama</label><select class="select2 form-control nama_pengguna_select" name="nama_pengguna" id="nama_pengguna"> <option value="" disabled>Pilih salah satu</option>'
+                        for (let i = 0; i < staff.length; i++) {
+                            const value = staff[i];
+                            baris += '<option value="' + value['nama_penilai'] + '">' + value['nama_penilai'] + '</option>'
+                        }
+                        baris += '</select>'
+                        $('.nama_group').html(baris)
+
+
+                    } else if (data.id_role == 4) {
+                        $('#nama_pengguna').hide()
+                        pegawai = data.pegawai
+
+                    }
+                }
+
+            })
+
+        })
+
     });
+
 
     function swall($title) {
         Swal.fire({
@@ -443,7 +485,7 @@
                     $('#email_pengguna_ubah').val(data.email_pengguna)
                     id_role = data.role_pengguna
                     aktif = data.aktif_pengguna
-                    $('#aktif_pengguna_ubah').val(aktif)
+                    // $('#aktif_pengguna_ubah').val(aktif)
 
 
                     //tampilkan data role

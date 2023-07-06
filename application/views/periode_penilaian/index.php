@@ -37,6 +37,9 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <?php if ($this->session->flashdata('pesan')) {
+                                echo $this->session->flashdata('pesan');
+                            } ?>
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -63,12 +66,13 @@
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
 
                                                 <?php if ($value['status'] == 'belum') { ?>
                                                     <button class="btn btn-success btn-sm btn_kirim" data-idperiode="<?= $value['id_periode'] ?>" data-tglpenilaian="<?= $value['tgl_penilaian'] ?>"><i class="fas fa-solid fa-paper-plane"></i></button>
-                                                <?php } else { ?>
-                                                    <a href="<?= base_url('Periode_penilaian/detail_periode/'). $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat" ><i class="fas fa-solid fa-eye"></i></a>
+
+                                                    <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
+                                                <?php } elseif ($value['status'] == 'sedang dinilai') { ?>
+                                                    <a href="<?= base_url('Periode_penilaian/detail_periode/') . $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
                                                 <?php } ?>
 
                                             </td>
@@ -257,7 +261,7 @@
         })
     }
 
-    function kirim(id_periode,tgl_penilaian) {
+    function kirim(id_periode, tgl_penilaian) {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Form penilaian pegawai akan dikirim ke tabel penilaian",

@@ -26,6 +26,7 @@
                     <div class="card">
                         <div class="card-header">
 
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -75,6 +76,11 @@
                                     ?>
                                 </tbody>
                             </table>
+                            <?php
+                            $cek = $this->db->query("SELECT * FROM tb_penilaian WHERE staff_id = {$staff_id}")->result_array();
+                            if ($cek) { ?>
+                                <button class="btn btn-success btn_selesai" data-idstaff="<?= $staff_id ?>"><i class="fas fa-solid fa-check "></i> selesai</button>
+                            <?php } ?>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -297,17 +303,68 @@
 
         })
 
+        $('.btn_selesai').click(function() {
+            id_staff = $(this).data('idstaff')
+            selesai(id_staff)
+
+        })
+
     });
 
     function swall($title) {
         Swal.fire({
             icon: 'success',
-            title: 'Data Berhasil ' + $title,
+            title: 'Data selesai ' + $title,
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
             location.href = '<?= base_url('Penilaian') ?>';
         })
 
+    }
+
+    function swall_gagal_hitung($title) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Data Gagal ' + $title,
+            text: "Penilaian pegawai belum selesai semuanya !!",
+            showConfirmButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            location.reload();
+        })
+
+    }
+
+    function selesai(id_staff) {
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Penilaian pegawai tidak bisa diubah kembali",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, selesai',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'POST',
+                    url: '<?= base_url('Penilaian/selesai_penilaian')  ?>',
+                    data: {
+                        id_staff: id_staff,
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        if (status == 1) {
+                            swall('Dihitung')
+                        } else {
+                            swall_gagal_hitung('dihitung')
+                        }
+                    }
+
+                })
+            }
+        })
     }
 </script>

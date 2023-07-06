@@ -44,9 +44,13 @@
                                 $cek2 = $this->db->get()->result_array();
 
                                 if (!$cek2) { ?>
-                                    <button class="btn btn-primary btn_hitung" data-idperiode="<?= $id_periode ?>">
+                                    <a onclick="return confirm('Data penilaian pegawai akan dihitung secara keseluruhan')" href="<?= base_url('Periode_penilaian/hitung_nilaiAkhir/' . $id_periode) ?>" class="btn btn-primary">
                                         Hitung Nilai Akhir
-                                    </button>
+                                    </a>
+                                    <!-- <button class="btn btn-primary" id="btn_hitung" data-idperiode="">
+                                        Hitung
+                                    </button> -->
+
                             <?php }
                             }
                             ?>
@@ -61,7 +65,7 @@
                                         <th>Nama Penilai</th>
                                         <th>Staff yang dinilai</th>
                                         <th>Status</th>
-                                        <th>Aksi</th>
+                                        <!-- <th>Aksi</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,12 +84,7 @@
                                                     <span class="badge badge-primary">selesai</span>
                                                 <?php } ?>
                                             </td>
-                                            <td>
-                                                <?php if ($value['status'] == 'selesai') { ?>
-                                                    <a href="<?= base_url('Periode_penilaian/detail_penilaian_staff/' . $value["periode_id"] . '/' . $value["staff_id"]) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
-                                                <?php } ?>
 
-                                            </td>
                                         </tr>
                                     <?php }
                                     ?>
@@ -184,10 +183,12 @@
         $('.select2').select2()
 
 
-        $('.btn_hitung').click(function() {
+        $('#btn_hitung').click(function() {
             id_periode = $(this).data('idperiode');
+            console.log(id_periode)
             hitung(id_periode)
         })
+
 
     })
 
@@ -198,12 +199,13 @@
             showConfirmButton: false,
             timer: 1500
         }).then((result) => {
-            location.reload();
+            window.location = <?= base_url('Periode_penilaian') ?>;
         })
 
     }
 
     function hitung(id_periode) {
+        console.log(id_periode)
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Data penilaian pegawai akan dihitung secara keseluruhan",
@@ -225,6 +227,7 @@
                     success: function(status) {
                         if (status == 1) {
                             swall('Dihitung')
+
                         }
                     }
 

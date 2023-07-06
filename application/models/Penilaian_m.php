@@ -58,9 +58,6 @@ class Penilaian_m extends CI_Model
             ];
             array_push($data_detail_penilaian, $data);
         }
-
-
-
         $this->db->insert_batch('tb_detail_penilaian', $data_detail_penilaian);
 
         //update status penilaian pegawai ke tabel penilaian
@@ -82,44 +79,86 @@ class Penilaian_m extends CI_Model
             $this->db->update('tb_detail_periode', ['status' => 'selesai']);
         }
 
-       
 
-        $this->hitung_nilai_vektor($penilaian_id, $pegawai_id, $periode_id);
+
+        // $this->hitung_nilai_vektor($penilaian_id, $pegawai_id, $periode_id, $status = 'tambah');
     }
 
-    public function hitung_nilai_vektor($penilaian_id, $pegawai_id, $periode_id)
+    public function ubah_penilaian()
     {
-        // $penilaian_id = $this->input->post('idPenilaian');
-        // $pegawai_id = $this->input->post('idPegawai');
-        // $periode_id = $this->input->post('idPeriode');
+        $penilaian_id = $this->input->post('penilaian_id');
+        $pegawai_id = $this->input->post('pegawai_id');
+        $staff_id = $this->input->post('staff_id');
+        $periode_id = $this->input->post('periode_id');
 
-        $this->db->select('*');
-        $this->db->from('tb_detail_penilaian dp');
-        $this->db->join('tb_subkriteria sb', 'dp.subkriteria_id = sb.id_subkriteria');
-        $this->db->where('penilaian_id', $penilaian_id);
-        $this->db->where('pegawai_id', $pegawai_id);
-        $detail_penilaian = $this->db->get()->result_array();
+        $data_detail_penilaian = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $subkriteria_id = $this->input->post('subkriteria' . $i);
+            $nilaisub = $this->input->post('nilaisub' . $i);
 
-
-        $vektor_s = 1;
-        foreach ($detail_penilaian as $key => $value) {
-
-            $vektor_s *= ($value['nilai'] ** $value['bobot_subkriteria']);
+            $data = [
+                'penilaian_id' => $penilaian_id,
+                'pegawai_id' => $pegawai_id,
+                'subkriteria_id' => $subkriteria_id,
+                'nilai' => $nilaisub
+            ];
+            array_push($data_detail_penilaian, $data);
         }
 
+        $this->db->update_batch('tb_detail_penilaian', $data_detail_penilaian, 'subkriteria_id');
 
-        $data_hasil = [
-            'pegawai_id' => $pegawai_id,
-            'periode_id' => $periode_id,
-            'vektor_s' => $vektor_s,
-            'vektor_v' => 0
-        ];
 
-        $this->db->insert('tb_hasil_penilaian', $data_hasil);
+        //hitung nilai vektor s
+        // $this->hitung_nilai_vektor($penilaian_id, $pegawai_id, $periode_id, $status = 'ubah');
     }
 
-    public function simpan_nilai($id_sequrity)
+    public function hitung_nilai_vektors($id_staff)
     {
+        // $penilaian = $this->db->get_where('tb_penilaian', ['staff_id' => $id_staff])->result_array();
+
+        $this->db->select('*');
+        $this->db->from('tb_penilaian p');
+        $this->db->join('tb_pegawai pg', 'p.pegawai_id = pg.id_pegawai');
+        $this->db->join('tb_jabatan jb', 'pg.jabatan_id = jb.id_jabatan');
+        $this->db->where('p.staff_id', $id_staff);
+        $penilaian = $this->db->get()->result_array();
+
+        foreach ($penilaian as $key => $value) {
+            $pegawai_id = $value['pegawai_id'];
+            $periode_id = $value['periode_id'];
+            $jabatan_id = $value['jabatan_id'];
+            $penilaian_id = $value['id_penilaian'];
+
+            $this->db->select('*');
+            $this->db->from('tb_detail_penilaian dp');
+            $this->db->join('tb_subkriteria sb', 'dp.subkriteria_id = sb.id_subkriteria');
+            $this->db->where('penilaian_id', $penilaian_id);
+            $this->db->where('pegawai_id', $pegawai_id);
+            $detail_penilaian = $this->db->get()->result_array();
+
+
+            $vektor_s = 1;
+            foreach ($detail_penilaian as $key => $dp) {
+
+                $vektor_s *= ($dp['nilai'] ** $dp['bobot_subkriteria']);
+            }
+
+
+            $data_hasil = [
+                'pegawai_id' => $pegawai_id,
+                'jabatan_id' => $jabatan_id,
+                'periode_id' => $periode_id,
+                'vektor_s' => $vektor_s,
+                'vektor_v' => 0
+            ];
+
+            $this->db->insert('tb_hasil_penilaian', $data_hasil);
+
+            //hapus data penilaian pegawai ke tabel penilaian
+            $this->db->where('pegawai_id', $pegawai_id);
+            $this->db->where('periode_id', $periode_id);
+            $this->db->delete('tb_penilaian');
+        }
     }
 
     private function sendmail()
