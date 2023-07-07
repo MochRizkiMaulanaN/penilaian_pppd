@@ -71,7 +71,7 @@
                                                     <button class="btn btn-success btn-sm btn_kirim" data-idperiode="<?= $value['id_periode'] ?>" data-tglpenilaian="<?= $value['tgl_penilaian'] ?>"><i class="fas fa-solid fa-paper-plane"></i></button>
 
                                                     <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
-                                                <?php } elseif ($value['status'] == 'sedang dinilai') { ?>
+                                                <?php } elseif ($value['status'] == 'sedang dinilai' || $value['status'] == 'selesai' ) { ?>
                                                     <a href="<?= base_url('Periode_penilaian/detail_periode/') . $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
                                                 <?php } ?>
 

@@ -95,7 +95,29 @@ class Periode_penilaian extends CI_Controller
         // }
     }
 
-    public function detail_penilaian_staff($id_periode, $id_staff)
+    // public function detail_penilaian_akhir($id_periode)
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('tb_penilaian pn');
+    //     $this->db->join('tb_pegawai pg', 'pn.pegawai_id = pg.id_pegawai');
+    //     $this->db->join('tb_jabatan jb', 'pg.jabatan_id = jb.id_jabatan');
+    //     $this->db->where('pn.staff_id', $id_staff);
+    //     $this->db->where('periode_id', $id_periode);
+    //     $data['detail_penilaian'] = $this->db->get()->result_array();
+    //     // $data['periode'] = $this->Periode_penilaian_model->tampil_periode();
+    //     $data['title'] = 'Halaman Detail Penilaian Staff';
+    //     $data['id_periode'] = $id_periode;
+    //     $data['id_staff'] = $id_staff;
+
+    //     $this->load->view('templates/header', $data);
+    //     $this->load->view('templates/navbar');
+    //     $this->load->view('templates/sidebar');
+    //     $this->load->view('periode_penilaian/detail_penilaian_staff', $data);
+    //     $this->load->view('templates/footer');
+    // }
+    
+
+    public function detail_penilaian_akhir_staff($id_periode, $id_staff)
     {
         $this->db->select('*');
         $this->db->from('tb_penilaian pn');

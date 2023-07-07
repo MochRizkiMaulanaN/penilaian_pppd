@@ -32,7 +32,7 @@
                     <div class="card">
                         <div class="card-header">
                             <!-- <button class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"><i class="fa fa-plus"></i> Kuota Pegawai Perpanjangan</button> -->
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_rekomendasi"><i class="fa fa-plus"></i> Tambah</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"><i class="fa fa-plus"></i> Tambah</button>
 
                         </div>
                         <!-- /.card-header -->
@@ -90,7 +90,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form id="form" method="post" action="<?= base_url('Rekomendasi/tambah_rekomendasi') ?>">
+                <form id="form" method="post">
                     <div class="form-group">
                         <label for="kuota">Kuota Pegawai Perpanjangan</label>
                         <input type="number" class="form-control" name="kuota">

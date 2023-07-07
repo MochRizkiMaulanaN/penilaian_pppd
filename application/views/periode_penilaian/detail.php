@@ -41,7 +41,7 @@
                                 $this->db->from('tb_periode_penilaian');
                                 $this->db->where('id_periode', $id_periode);
                                 $this->db->where('status', 'selesai');
-                                $cek2 = $this->db->get()->result_array();
+                                $cek2 = $this->db->get()->row_array();
 
                                 if (!$cek2) { ?>
                                     <a onclick="return confirm('Data penilaian pegawai akan dihitung secara keseluruhan')" href="<?= base_url('Periode_penilaian/hitung_nilaiAkhir/' . $id_periode) ?>" class="btn btn-primary">
@@ -65,7 +65,6 @@
                                         <th>Nama Penilai</th>
                                         <th>Staff yang dinilai</th>
                                         <th>Status</th>
-                                        <!-- <th>Aksi</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,6 +83,7 @@
                                                     <span class="badge badge-primary">selesai</span>
                                                 <?php } ?>
                                             </td>
+
 
                                         </tr>
                                     <?php }

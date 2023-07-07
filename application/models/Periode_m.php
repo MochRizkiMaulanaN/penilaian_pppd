@@ -57,7 +57,7 @@ class Periode_m extends CI_Model
             $cek_data = $this->db->get()->row_array();
             if ($cek_data) {
                 // foreach ($cek_data as $key => $value) {
-                if ($cek_data['status'] == 'belum' || $cek_data['status'] == 'proses penilaian') {
+                if ($cek_data['status'] == 'belum' || $cek_data['status'] == 'sedang dinilai') {
                     return true;
                     // break;
                 } else {
@@ -90,22 +90,22 @@ class Periode_m extends CI_Model
 
     public function tambah_detail_periode($tgl_penilaian, $id_periode)
     {
+        //cek staff ke tabel pegawai
+        $this->db->from('tb_pegawai');
+        $this->db->group_by('staff_id');
+        $staff_id = $this->db->get()->result_array();
 
-        //tambah data ke tabel detail periode
-        $staff = $this->db->get('tb_staff')->result_array();
-
-        $data_periode = [];
-        foreach ($staff as $key => $value) {
+        foreach ($staff_id as $key => $value) {
+            //tambah data ke tabel detail periode
             $data = [
                 'periode_id' => $id_periode,
                 'tgl_penilaian' => $tgl_penilaian,
-                'staff_id' => $value['id_staff'],
+                'staff_id' => $value['staff_id'],
                 'status' => 'proses penilaian'
             ];
 
-            array_push($data_periode, $data);
+            $this->db->insert('tb_detail_periode', $data);
         }
-        $this->db->insert_batch('tb_detail_periode', $data_periode);
 
         //update status di tabel periode penilaian
         $this->db->update('tb_periode_penilaian', ['status' => 'sedang dinilai'], ['id_periode' => $id_periode]);
@@ -176,7 +176,7 @@ class Periode_m extends CI_Model
 
         $vektors_pg = 1;
         foreach ($subkriteria as $key => $value) {
-            $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
+            $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
         }
 
 
@@ -194,6 +194,7 @@ class Periode_m extends CI_Model
             foreach ($jumlah_vektors as $key => $value_vs) {
                 if ($jabatan_id == $value_vs['jabatan_id']) {
                     $vektor_v = $vektor_s / $value_vs['jumlah'];
+                    $passing_grade = $vektors_pg / $value_vs['jumlah'];
                 }
             }
 
@@ -221,7 +222,41 @@ class Periode_m extends CI_Model
             // $this->db->where('pegawai_id', $pegawai_id);
             // $this->db->update('tb_penilaian', ['nilai' => $vektor_v, 'passing_grade' => $passing_grade ]);
 
+            //cek apakah pegawai sudah dilakukan penilaian sebanyak 4 kali (akan dimasukkan ke tabel rekomendasi)
+            $this->db->from('tb_nilai_akhir');
+            $this->db->where('pegawai_id', $pegawai_id);
+            $this->db->order_by('pegawai_id', 'desc');
+            $cek_penilaian = $this->db->get()->num_rows();
 
+            if ($cek_penilaian >= 4) {
+                $this->db->from('tb_nilai_akhir');
+                $this->db->where('pegawai_id', $pegawai_id);
+                $this->db->order_by('pegawai_id', 'desc');
+                $this->db->limit(4);
+                $nilai_akhir = $this->db->get()->result_array();
+
+                $nilai_akhir_pegawai = 0;
+                foreach ($nilai_akhir as $key => $value) {
+                    $nilai_akhir_pegawai += $value['nilai_akhir'];
+                }
+
+                if ($nilai_akhir_pegawai > $passing_grade) {
+                    $keterangan = 'Perpanjangan Kontrak';
+                } else {
+                    $keterangan = 'Pemutusan Kontrak';
+                }
+
+                $data = [
+                    'pegawai_id' => $pegawai_id,
+                    'jabatan_id' => $jabatan_id,
+                    'staff_id' => $staff_id['staff_id'],
+                    'periode_tahun' => date('Y', strtotime($tgl_periode['tgl_penilaian'])),
+                    'nilai_akhir' => $nilai_akhir_pegawai,
+                    'keterangan' => $keterangan,
+                ];
+
+                $this->db->insert('tb_rekomendasi', $data);
+            }
         }
 
         //update status periode penilaian di tabel periode penilaian
@@ -232,8 +267,8 @@ class Periode_m extends CI_Model
         $this->db->query('DELETE FROM tb_detail_penilaian');
 
         // hapus data detail periode ke tabel detail periode
-        $this->db->where('periode_id', $id_periode);
-        $this->db->delete('tb_detail_periode');
+        // $this->db->where('periode_id', $id_periode);
+        // $this->db->delete('tb_detail_periode');
 
         // hapus data hasil penilaian ke tabel hasil penilaian
         $this->db->where('periode_id', $id_periode);
