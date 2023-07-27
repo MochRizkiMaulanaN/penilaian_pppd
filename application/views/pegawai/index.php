@@ -46,9 +46,6 @@
                                         <th>NIP</th>
                                         <th>Jabatan</th>
                                         <th>Staff</th>
-                                        <!-- <th>Alamat</th>
-                                        <th>No Telp</th> -->
-                                        <!-- <th>Email</th> -->
                                         <th>Masa Akhir Kontrak</th>
                                         <th>Status Pegawai</th>
                                         <th>Aksi</th>
@@ -64,9 +61,6 @@
                                             <td><?= $value['nip_pegawai'] ?></td>
                                             <td><?= $value['nama_jabatan'] ?></td>
                                             <td><?= $value['nama_staff'] ?></td>
-                                            <!-- <td><?= $value['alamat'] ?></td>
-                                            <td><?= $value['no_telp'] ?></td>
-                                            <td><?= $value['email'] ?></td> -->
                                             <td><?= date('d F Y', strtotime($value['akhir_kontrak']))  ?></td>
                                             <td>
                                                 <?php if ($value['status_pegawai'] == 1) { ?>

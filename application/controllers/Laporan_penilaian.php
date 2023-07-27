@@ -19,12 +19,41 @@ class Laporan_penilaian extends CI_Controller
     function index()
     {
         $data['title'] = 'Halaman Laporan Penilaian';
-        $data['role'] = $this->Laporan_m->tampil_laporan();
+        $data['laporan'] = $this->Laporan_m->tampil_laporan();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/navbar');
         $this->load->view('templates/sidebar');
         $this->load->view('laporan_penilaian/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    function detail_nilai($periode_tahun, $jabatan_id, $nama_jabatan)
+    {
+        $data['title'] = 'Halaman Detail Penilaian';
+        $data['detail_nilai'] = $this->Laporan_m->detail_nilai($periode_tahun, $jabatan_id);
+        $data['jabatan'] = $nama_jabatan;
+        $data['jabatan_id'] = $jabatan_id;
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/detail_nilai', $data);
+        $this->load->view('templates/footer');
+    }
+
+
+    function tampil_nilai_periode($periode_tahun, $pegawai_id, $nama_jabatan, $nama_pegawai, $jabatan_id)
+    {
+        $data['title'] = 'Halaman Detail Penilaian';
+        $data['periode_nilai'] = $this->Laporan_m->periode_nilai($periode_tahun, $pegawai_id);
+        $data['jabatan'] = $nama_jabatan;
+        $data['jabatan_id'] = $jabatan_id;
+        $data['tahun'] = $periode_tahun;
+        $data['nama_pegawai'] = $nama_pegawai;
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/periode_nilai', $data);
         $this->load->view('templates/footer');
     }
 }

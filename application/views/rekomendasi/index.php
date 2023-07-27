@@ -32,7 +32,7 @@
                     <div class="card">
                         <div class="card-header">
                             <!-- <button class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"><i class="fa fa-plus"></i> Kuota Pegawai Perpanjangan</button> -->
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"><i class="fa fa-plus"></i> Tambah</button>
+                            <a class="btn btn-primary" href="<?= base_url('Rekomendasi/tambah') ?>"><i class="fa fa-plus"></i> Tambah</a>
 
                         </div>
                         <!-- /.card-header -->
@@ -98,12 +98,9 @@
                     </div>
                     <div class="form-group">
                         <label for="jabatan">Jabatan</label>
-                        <select class="select2-single-placeholder form-control" name="jabatan">
-                            <option value="">Pilih Jabatan</option>
-                            <?php foreach ($jabatan as $key => $value) { ?>
-                                <option value="<?= $value['id_jabatan']; ?>"><?= $value['nama_jabatan']; ?></option>
-                            <?php } ?>
-                        </select>
+                        <?php foreach ($nama_jabatan as $key => $value) { ?>
+                            <option value="<?= $value['id_jabatan']; ?>"><?= $value['nama_jabatan']; ?></option>
+                        <?php } ?>
                         <small class="form-text text-danger" id="jabatan_error"></small>
                     </div>
             </div>

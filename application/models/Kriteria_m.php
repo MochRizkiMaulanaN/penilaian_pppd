@@ -34,6 +34,7 @@ class Kriteria_m extends CI_Model
         ];
 
         $this->db->update('tb_kriteria', $data, ['id_kriteria' => $id_kriteria]);
+        $this->db->update('tb_subkriteria', ['bobot_subkriteria' => $bobot_kriteria], ['kriteria_id' => $id_kriteria]);
     }
 
     

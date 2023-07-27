@@ -70,13 +70,13 @@ class Periode_m extends CI_Model
                     // $tgl_sebelumnya = $cek_tanggal['tgl_penilaian'];
                     $tgl_sebelumnya = $cek_data['tgl_penilaian'];
 
-                    $tgl_berikutnya = date('Y-m-d', strtotime('+3 month', strtotime($tgl_sebelumnya)));
+                    //$tgl_berikutnya = date('Y-m-d', strtotime('+3 month', strtotime($tgl_sebelumnya)));
 
-                    if (strtotime($tgl_penilaian) >= strtotime($tgl_berikutnya)) {
-                        $this->tambah_periode($tgl_penilaian);
+                    if (strtotime($tgl_penilaian) < strtotime($tgl_sebelumnya)) {
+                        return true;
                         // break;
                     } else {
-                        return true;
+                        $this->tambah_periode($tgl_penilaian);
                         // break;
                     }
                 }
@@ -222,7 +222,7 @@ class Periode_m extends CI_Model
             // $this->db->where('pegawai_id', $pegawai_id);
             // $this->db->update('tb_penilaian', ['nilai' => $vektor_v, 'passing_grade' => $passing_grade ]);
 
-            //cek apakah pegawai sudah dilakukan penilaian sebanyak 4 kali (akan dimasukkan ke tabel rekomendasi)
+            //cek apakah pegawai sudah dilakukan penilaian sebanyak 4 kali (akan dimasukkan ke tabel laporan penilaian)
             $this->db->from('tb_nilai_akhir');
             $this->db->where('pegawai_id', $pegawai_id);
             $this->db->order_by('pegawai_id', 'desc');
@@ -255,7 +255,7 @@ class Periode_m extends CI_Model
                     'keterangan' => $keterangan,
                 ];
 
-                $this->db->insert('tb_rekomendasi', $data);
+                $this->db->insert('tb_laporan_penilaian', $data);
             }
         }
 
@@ -271,8 +271,8 @@ class Periode_m extends CI_Model
         // $this->db->delete('tb_detail_periode');
 
         // hapus data hasil penilaian ke tabel hasil penilaian
-        $this->db->where('periode_id', $id_periode);
-        $this->db->delete('tb_hasil_penilaian');
+        // $this->db->where('periode_id', $id_periode);
+        // $this->db->delete('tb_hasil_penilaian'); noted
 
         //cek keseluruhan status periode penilaian
         // $this->db->from('tb_periode_penilaian');

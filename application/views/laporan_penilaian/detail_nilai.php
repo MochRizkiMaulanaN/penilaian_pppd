@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Laporan Penilaian</h1>
+                    <h1 class="m-0">Detail Penilaian</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Laporan Penilaian</li>
+                        <li class="breadcrumb-item active">Detail Penilaian</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,40 +31,37 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <!--Tahun :
-                            <select name="" id="">
-                                <option value="">2023</option>
-                                <option value="">2022</option>
-                                <option value="">2021</option>
-                                <option value="">2020</option>
-                                <option value="">2019</option>
-                            </select> -->
+                            <a href="<?= base_url('Laporan_penilaian') ?>" class="btn btn-warning text-white">Kembali</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <strong>Jabatan : <?= rawurldecode($jabatan); ?></strong>
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tahun</th>
-                                        <th>Jabatan</th>
+                                        <th>NIP</th>
+                                        <th>Nama</th>
+                                        <th>Nilai Akhir</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $no = 1;
-                                    foreach ($laporan as $key => $value) {
-                                        $nama_jabatan = $value['nama_jabatan'];
+                                    foreach ($detail_nilai as $key => $value) {
+                                        $pegawai_id = $value['pegawai_id'];
                                         $jabatan_id = $value['jabatan_id'];
                                         $periode_tahun = $value['periode_tahun'];
+                                        $nama_pegawai=$value['nama_pegawai'];
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $periode_tahun ?></td>
-                                            <td><?= $nama_jabatan ?></td>
+                                            <td><?= $value['nip_pegawai'] ?></td>
+                                            <td><?= $nama_pegawai ?></td>
+                                            <td><?= $value['nilai_akhir'] ?></td>
                                             <td>
-                                                <a href="<?= base_url('Laporan_penilaian/detail_nilai/' . $periode_tahun . '/' . $jabatan_id . '/' . $nama_jabatan) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
+                                                <a href="<?= base_url('Laporan_penilaian/tampil_nilai_periode/' . $periode_tahun . '/' . $pegawai_id . '/' . $jabatan . '/' . $nama_pegawai.'/'.$jabatan_id) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     <?php }

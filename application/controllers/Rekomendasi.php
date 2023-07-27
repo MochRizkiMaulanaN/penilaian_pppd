@@ -29,18 +29,27 @@ class Rekomendasi extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-    public function tambah_rekomendasi()
+    public function tambah()
     {
-        $this->form_validation->set_rules('tahun', 'tahun', 'required|trim', [
-            'required' => 'Periode tahun tidak boleh kosong',
+        $this->form_validation->set_rules('kuota', 'kuota', 'required|trim', [
+            'required' => 'Kuota tidak boleh kosong',
         ]);
 
         if ($this->form_validation->run() == false) {
+            $this->db->from('tb_laporan_penilaian');
+            $this->db->group_by('periode_tahun');
+            $data['tahun'] = $this->db->get()->result_array();
+
+            $this->db->from('tb_laporan_penilaian lp');
+            $this->db->join('tb_jabatan jb', 'lp.jabatan_id = jb.id_jabatan ');
+            $this->db->group_by('jabatan_id');
+            $data['jabatan'] = $this->db->get()->result_array();
+
             $data['title'] = 'Halaman Rekomendasi';
             $this->load->view('templates/header', $data);
             $this->load->view('templates/navbar');
             $this->load->view('templates/sidebar');
-            $this->load->view('rekomendasi/index');
+            $this->load->view('rekomendasi/tambah', $data);
             $this->load->view('templates/footer');
         } else {
             $this->Rekomendasi_m->tambah();

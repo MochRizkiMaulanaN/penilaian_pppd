@@ -18,13 +18,13 @@ class Subkriteria extends CI_Controller
 
     public function index($id_kriteria, $nama_kriteria)
     {
-        $data['title'] = 'Halaman Subkriteria';
+
         $data = [
             'nama_kriteria' => $nama_kriteria,
             'id_kriteria' => $id_kriteria,
         ];
         $data['subkriteria'] = $this->Subkriteria_m->tampil_subkriteria($id_kriteria);
-
+        $data['title'] = 'Halaman Subkriteria';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/navbar');
         $this->load->view('templates/sidebar');
