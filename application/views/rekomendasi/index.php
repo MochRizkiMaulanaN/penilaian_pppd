@@ -44,12 +44,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>NIP</th>
-                                        <th>Nama Pegawai</th>
+                                        <th>Tahun</th>
                                         <th>Jabatan</th>
-                                        <th>Periode Tahun</th>
-                                        <th>Nilai Akhir</th>
-                                        <th>Rekomendasi</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -58,14 +54,10 @@
                                     foreach ($rekomendasi as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $value['nip_pegawai'] ?></td>
-                                            <td><?= $value['nama_pegawai'] ?></td>
-                                            <td><?= $value['nama_jabatan'] ?></td>
                                             <td><?= $value['periode_tahun'] ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
-                                            <td><?= $value['keterangan'] ?></td>
+                                            <td><?= $value['nama_jabatan'] ?></td>
                                             <td>
-                                                <a href="<?= base_url('Rekomedasi/detail/') . $value['pegawai_id'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
+                                                <a href="<?= base_url('Rekomendasi/detail/') . $value['jabatan_id'] . '/' . $value['periode_tahun'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     <?php }

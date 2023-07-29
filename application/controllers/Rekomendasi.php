@@ -59,4 +59,20 @@ class Rekomendasi extends CI_Controller
             redirect('Rekomendasi');
         }
     }
+
+    public function detail($jabatan_id, $periode_tahun)
+    {
+        $this->db->from('tb_rekomendasi r');
+        $this->db->join('tb_pegawai pg', 'r.pegawai_id = pg.id_pegawai ');
+        $this->db->where('periode_tahun', $periode_tahun);
+        $this->db->where('r.jabatan_id', $jabatan_id);
+        $data['rekomendasi'] = $this->db->get()->result_array();
+
+        $data['title'] = 'Halaman Detail Rekomendasi';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('rekomendasi/detail_rekomendasi', $data);
+        $this->load->view('templates/footer');
+    }
 }
