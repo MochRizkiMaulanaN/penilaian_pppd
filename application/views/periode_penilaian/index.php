@@ -70,10 +70,21 @@
                                                 <?php if ($value['status'] == 'belum') { ?>
                                                     <button class="btn btn-success btn-sm btn_kirim" data-idperiode="<?= $value['id_periode'] ?>" data-tglpenilaian="<?= $value['tgl_penilaian'] ?>"><i class="fas fa-solid fa-paper-plane"></i></button>
 
-                                                    <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
-                                                <?php } elseif ($value['status'] == 'sedang dinilai' || $value['status'] == 'selesai' ) { ?>
+                                                <?php } elseif ($value['status'] == 'sedang dinilai') { ?>
+                                                    <a href="<?= base_url('Periode_penilaian/detail_periode/') . $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
+
+                                                <?php } elseif ($value['status'] == 'selesai') { ?>
                                                     <a href="<?= base_url('Periode_penilaian/detail_periode/') . $value['id_periode'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
                                                 <?php } ?>
+
+                                                <?php
+                                                $id_periode = $value['id_periode'];
+                                                $cek_status = $this->db->query("SELECT * FROM tb_detail_periode WHERE status='selesai' AND periode_id = $id_periode ")->row_array();
+
+                                                if (empty($cek_status) || $value['status'] == 'belum') { ?>
+                                                    <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_periode'] ?>"><i class="fas fa-solid fa-trash"></i></button>
+                                                <?php }
+                                                ?>
 
                                             </td>
                                         </tr>
@@ -99,17 +110,31 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Periode</h4>
+                <h4 class="modal-title">Tambah Tahun Periode</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form id="tambah_periode">
+
                     <div class="form-group">
                         <label for="tgl_penilaian">Tanggal Penilaiain</label>
                         <input type="date" class="form-control" name="tgl_penilaian" id="tgl_penilaian">
                     </div>
+
+
+                    <!--<div class="form-group">
+                        <label for="thn_periode">Tahun Periode</label>
+                        <select name="tahun" id="tahun" class="form-control select2">
+                            <option value=""></option>
+                            <?php
+                            $now = date('Y');
+                            for ($i = 2019; $i <= $now; $i++) : ?>
+                                <option value="<?= $i ?>"><?= $i ?></option>
+                            <?php endfor ?>
+                        </select>
+                    </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -156,7 +181,10 @@
 <script>
     $(function() {
         //Initialize Select2 Elements
-        $('.select2').select2()
+        $('.select2').select2({
+            placeholder: "Pilih Periode Tahun",
+            allowClear: true
+        })
 
 
         $('#tambah_periode').validate({

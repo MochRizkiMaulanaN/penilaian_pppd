@@ -6,7 +6,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="<?= base_url('assets/') ?>dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="<?= base_url('assets/') ?>dist/img/user1.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <p class="d-block text-white"><?= $this->session->userdata('nama_pengguna') ?></p>
@@ -40,7 +40,8 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <!-- <li class="nav-item">
-                                <a href="<?// base_url('Role') ?>" class="nav-link">
+                                <a href="<? // base_url('Role') 
+                                            ?>" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Data Role</p>
                                 </a>
@@ -131,6 +132,18 @@
                                 </p>
                             </a>
                         </li>
+                        <?php
+                        $nip_pengguna = $this->session->userdata('nip_pengguna');
+                        $staff = $this->db->get_where('tb_staff', ['nip_staff' => $nip_pengguna])->row_array();
+                        ?>
+                        <li class="nav-item">
+                            <a href="<?= base_url('Laporan_penilaian/tampil_penilaian_staff/' . $staff['id_staff']) ?>" class="nav-link">
+                                <i class="nav-icon fas fa-solid fa-clipboard"></i>
+                                <p>
+                                    Laporan Penilaian
+                                </p>
+                            </a>
+                        </li>
                     <?php } ?>
 
                 <?php } ?>
@@ -138,9 +151,14 @@
 
                 <?php if ($this->session->userdata('role_id') == 4) { ?>
                     <li class="nav-header">Karyawan</li>
+                    <?php
+                    $nip_pengguna = $this->session->userdata('nip_pengguna');
+                    $pegawai = $this->db->get_where('tb_pegawai', ['nip_pegawai' => $nip_pengguna])->row_array();
 
+                    // var_dump($pegawai['id_pegawai']);die;
+                    ?>
                     <li class="nav-item">
-                        <a href="pages/gallery.html" class="nav-link">
+                        <a href="<?= base_url('Laporan_penilaian/tampil_penilaian_pegawai/' . $pegawai['id_pegawai']) ?>" class="nav-link">
                             <i class="nav-icon fas fa-solid fa-clipboard"></i>
                             <p>
                                 Hasil Penilaian

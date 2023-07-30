@@ -47,8 +47,8 @@
                                 <tbody>
                                     <?php foreach ($periode_nilai as $key => $value) : ?>
                                         <tr>
-                                            <td><?= date('d F Y', strtotime($value['tgl_penilaian'])) ?></td>
-                                            <td><?= $value['vektor_v'] ?></td>
+                                            <td><?= date('d F Y', strtotime($value['tgl_periode'])) ?></td>
+                                            <td><?= $value['nilai_akhir'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

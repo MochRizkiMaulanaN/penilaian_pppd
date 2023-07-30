@@ -28,6 +28,31 @@ class Laporan_penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function tampil_penilaian_pegawai($id_pegawai)
+    {
+        $data['title'] = 'Halaman Laporan Penilaian';
+        $data['laporan'] = $this->Laporan_m->tampil_laporan_pegawai($id_pegawai);
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/laporan_penilaian_pegawai', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function tampil_penilaian_staff($id_staff)
+    {
+        $data['title'] = 'Halaman Laporan Penilaian';
+        $data['laporan'] = $this->Laporan_m->tampil_laporan_staff($id_staff);
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/laporan_penilaian_staff', $data);
+        $this->load->view('templates/footer');
+    }
+
+
     function detail_nilai($periode_tahun, $jabatan_id, $nama_jabatan)
     {
         $data['title'] = 'Halaman Detail Penilaian';

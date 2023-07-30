@@ -3,12 +3,6 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-2">
         <h1 class="h3 mb-0 text-gray-800">Profile</h1>
         <ol class="breadcrumb">
-            <?php if ($this->session->userdata('jabatan') == 'Manajer Operasional') { ?>
-                <li class="breadcrumb-item"><a href="<?= base_url('Penilaian_mo'); ?>">Penilaian</a></li>
-            <?php } else { ?>
-                <li class="breadcrumb-item"><a href="<?= base_url('Halaman_utama'); ?>">Halaman Utama</a></li>
-            <?php } ?>
-
             <li class="breadcrumb-item active" aria-current="page">Profile</li>
         </ol>
     </div>
@@ -26,21 +20,21 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="email">Email</label>
-                                <p class="font-weight-bold"><?= $pengguna['email'] ?></p>
+                                <p class="font-weight-bold"></p>
                             </div>
                             <div class="col-md-6">
                                 <label for="nama">Nama Pengguna</label>
-                                <p class="font-weight-bold"><?= $pengguna['nama_pengguna'] ?></p>
+                                <p class="font-weight-bold"></p>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="jabatan">Jabatan</label>
-                                <p class="font-weight-bold"><?= $pengguna['nama_jabatan'] ?></p>
+                                <p class="font-weight-bold"></p>
                             </div>
                             <div class="col-md-6">
                                 <label for="perusahaan">Perusahaan</label>
-                                <p class="font-weight-bold"><?= $pengguna['nama_perusahaan'] ?></p>
+                                <p class="font-weight-bold"></p>
                             </div>
                         </div>
                         

@@ -75,4 +75,43 @@ class Rekomendasi extends CI_Controller
         $this->load->view('rekomendasi/detail_rekomendasi', $data);
         $this->load->view('templates/footer');
     }
+
+    public function perpanjangan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $nip = $this->input->post('nip');
+            $pegawai_id = $this->input->post('id');
+
+            $akhir_kontrak = $this->db->get('tb_pegawai', ['nip_pegawai' => $nip])->row_array();
+
+            $AkhirKontrak_berikutnya = date('Y-m-d', strtotime('+1 year', strtotime($akhir_kontrak['akhir_kontrak'])));
+
+            //update masa kontrak
+            $this->db->update('tb_pegawai', ['akhir_kontrak' => $AkhirKontrak_berikutnya], ['nip_pegawai' => $nip]);
+           
+
+            //hapus pegawai di tabel rekomendasi
+            $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
+
+            $data['status'] = 1;
+            echo json_encode($data);
+        }
+    }
+
+    public function pemutusan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $nip = $this->input->post('nip');
+            $pegawai_id = $this->input->post('id');
+
+            //update status pegawai menjadi non aktif
+            $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['nip_pegawai' => $nip]);
+           
+            //hapus pegawai di tabel rekomendasi
+            $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
+
+            $data['status'] = 1;
+            echo json_encode($data);
+        }
+    }
 }

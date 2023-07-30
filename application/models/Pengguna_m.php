@@ -12,12 +12,12 @@ class Pengguna_m extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    public function tampil_pengguna_id($id_pengguna)
+    public function tampil_pengguna_nip($nip_pengguna)
     {
         $this->db->select('*');
         $this->db->from('tb_pengguna pg');
         $this->db->join('tb_user_role r', 'pg.role_id = r.id_role');
-        $this->db->where('id_pengguna', $id_pengguna);
+        $this->db->where('nip_pengguna', $nip_pengguna);
         return $this->db->get()->row_array();
     }
 

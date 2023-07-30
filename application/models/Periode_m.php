@@ -114,7 +114,7 @@ class Periode_m extends CI_Model
     public function tambah_penilaian($id_periode)
     {
 
-        $data_pegawai = $this->db->get_where('tb_pegawai')->result_array();
+        $data_pegawai = $this->db->get_where('tb_pegawai')->result_array(); //awas ganti
 
         // if (!$data_pegawai) {
         //     return true;
@@ -139,8 +139,8 @@ class Periode_m extends CI_Model
         $config = [
             'protocol' => 'smtp',
             'smtp_host' => 'ssl://mail.tjoutsource.com',
-            'smtp_user' => 'trengginasjaya@tjoutsource.com',
-            'smtp_pass' => 'trengginasjaya',
+            'smtp_user' => 'pppd@pppd.com',
+            'smtp_pass' => 'pppd',
             'smtp_port' => 465,
             'mailtype' => 'html',
             'charset' => 'utf-8',
@@ -179,6 +179,8 @@ class Periode_m extends CI_Model
             $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
         }
 
+        // var_dump($vektors_pg);
+        // die;
 
 
         // $passing_grade = $vektors_pg / $total_vektors;
@@ -194,9 +196,10 @@ class Periode_m extends CI_Model
             foreach ($jumlah_vektors as $key => $value_vs) {
                 if ($jabatan_id == $value_vs['jabatan_id']) {
                     $vektor_v = $vektor_s / $value_vs['jumlah'];
-                    $passing_grade = $vektors_pg / $value_vs['jumlah'];
+                    $passing_grade = $value_vs['jumlah'] / $vektors_pg;
                 }
             }
+
 
             //update nilai vektor v
             $this->db->where('periode_id', $id_periode);
@@ -240,11 +243,11 @@ class Periode_m extends CI_Model
                     $nilai_akhir_pegawai += $value['nilai_akhir'];
                 }
 
-                if ($nilai_akhir_pegawai > $passing_grade) {
-                    $keterangan = 'Perpanjangan Kontrak';
-                } else {
-                    $keterangan = 'Pemutusan Kontrak';
-                }
+                // if ($nilai_akhir_pegawai > $passing_grade) {
+                //     $keterangan = 'Perpanjangan Kontrak';
+                // } else {
+                //     $keterangan = 'Pemutusan Kontrak';
+                // }
 
                 $data = [
                     'pegawai_id' => $pegawai_id,
@@ -252,7 +255,7 @@ class Periode_m extends CI_Model
                     'staff_id' => $staff_id['staff_id'],
                     'periode_tahun' => date('Y', strtotime($tgl_periode['tgl_penilaian'])),
                     'nilai_akhir' => $nilai_akhir_pegawai,
-                    'keterangan' => $keterangan,
+                    // 'keterangan' => $keterangan,
                 ];
 
                 $this->db->insert('tb_laporan_penilaian', $data);

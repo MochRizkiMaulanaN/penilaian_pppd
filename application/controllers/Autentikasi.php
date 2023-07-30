@@ -195,39 +195,6 @@ class Autentikasi extends CI_Controller
 		}
 	}
 
-	public function ubah_katasandi()
-	{
-		if (!$this->session->userdata('reset_email')) {
-			redirect('Autentikasi');
-		}
-
-		$this->form_validation->set_rules('password1', 'Password', 'required|trim|matches[password2]', [
-			'required' => 'Katasandi tidak boleh kosong',
-			'matches' => 'Katasandi harus sama'
-		]);
-		$this->form_validation->set_rules('password2', 'Ulangi Password', 'required|trim|matches[password1]', [
-			'required' => 'Katasandi tidak boleh kosong',
-			'matches' => 'Katasandi harus sama'
-		]);
-
-		if ($this->form_validation->run() == false) {
-			$data['title'] = 'Ubah Katasandi';
-			$this->load->view('templates/header_login', $data);
-			$this->load->view('autentikasi/ubah_katasandi');
-			$this->load->view('templates/footer_login');
-		} else {
-			$email = $this->session->userdata('reset_email');
-			$katasandi = $this->input->post('password1');
-
-			$this->db->update('tb_pengguna', ['katasandi' => $katasandi], ['email' => $email]);
-
-			$this->session->unset_userdata('reset_email');
-			$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
-               Katasandi berhasil diubah! Silahkan Login.
-              </div>');
-			redirect('Autentikasi');
-		}
-	}
 
 	public function keluar()
 	{
