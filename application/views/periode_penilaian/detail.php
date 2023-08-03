@@ -73,7 +73,7 @@
                                     foreach ($detail_periode as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
-                                            <td><?= date('d F Y', strtotime($value['tgl_penilaian']))  ?></td>
+                                            <td><?= date('F Y', strtotime($value['tgl_penilaian']))  ?></td>
                                             <td><?= $value['nama_penilai'] ?></td>
                                             <td><?= $value['nama_staff'] ?></td>
                                             <td>

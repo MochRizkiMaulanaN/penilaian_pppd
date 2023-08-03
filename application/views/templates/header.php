@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $title ?></title>
+    <link href="<?= base_url('assets/') ?>dist/img/logo.ico" rel="icon">
     <!-- jQuery -->
     <script src="<?= base_url('assets/') ?>plugins/jquery/jquery.min.js"></script>
     <!-- Google Font: Source Sans Pro -->

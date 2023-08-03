@@ -46,7 +46,7 @@ class Rekomendasi_m extends CI_Model
         foreach ($subkriteria as $key => $value) {
             $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
         }
-
+        //var_dump($vektors_pg);die;
 
         $this->db->select('*,SUM(vektor_s) AS jumlah');
         $this->db->from('tb_hasil_penilaian hp');
@@ -56,11 +56,13 @@ class Rekomendasi_m extends CI_Model
         $this->db->group_by('hp.jabatan_id');
         $jumlah_vektors = $this->db->get()->row_array();
 
+
+
         $passing_grade = $jumlah_vektors['jumlah'] / $vektors_pg;
 
 
 
-        // var_dump($rekomendasi);die;
+        //var_dump($passing_grade);die;
         $i = 1;
         foreach ($rekomendasi as $key => $value) {
             if ($i <= $kuota) {

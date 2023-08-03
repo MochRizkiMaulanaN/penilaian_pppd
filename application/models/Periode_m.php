@@ -7,7 +7,7 @@ class Periode_m extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('tb_periode_penilaian pp');
-        $this->db->order_by('tgl_penilaian', 'desc');
+        $this->db->order_by('tgl_penilaian', 'asc');
         $this->db->group_by('Year("tgl_penilaian")');
         return $this->db->get()->result_array();
     }
@@ -15,8 +15,8 @@ class Periode_m extends CI_Model
     public function tampil_periode()
     {
         $this->db->select('*');
-        $this->db->from('tb_periode_penilaian pp');
-        $this->db->order_by('tgl_penilaian', 'desc');
+        $this->db->from('tb_periode_penilaian');
+        $this->db->order_by('tgl_penilaian', 'asc');
         return $this->db->get()->result_array();
     }
 
@@ -30,15 +30,30 @@ class Periode_m extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    public function tambah_periode($tgl_penilaian)
+    public function tambah_periode($tahun)
     {
 
-        $data = [
-            'tgl_penilaian' => $tgl_penilaian,
-            'status' => 'belum'
-        ];
+        $data = array(
+            array(
+                'tgl_penilaian' => $tahun . '-02-01',
+                'status' => 'belum'
 
-        $this->db->insert('tb_periode_penilaian', $data);
+            ),
+            array(
+                'tgl_penilaian' => $tahun . '-05-01',
+                'status' => 'belum'
+            ),
+            array(
+                'tgl_penilaian' => $tahun . '-08-01',
+                'status' => 'belum'
+            ),
+            array(
+                'tgl_penilaian' => $tahun . '-011-01',
+                'status' => 'belum'
+            )
+        );
+
+        $this->db->insert_batch('tb_periode_penilaian', $data);
     }
 
     public function cek_statusPeriode($tgl_penilaian)
@@ -87,6 +102,23 @@ class Periode_m extends CI_Model
         }
     }
 
+    public function cek_statusPeriodeTahun($tahun)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_periode_penilaian');
+        $this->db->where('YEAR(tgl_penilaian)', $tahun);
+        $this->db->or_where('status', 'belum');
+        $this->db->or_where('status', 'sedang dinilai');
+        $cek = $this->db->get()->result_array();
+
+        if ($cek) {
+            return false;
+        } else {
+            $this->tambah_periode($tahun);
+            return true;
+        }
+    }
+
 
     public function tambah_detail_periode($tgl_penilaian, $id_periode)
     {
@@ -111,7 +143,7 @@ class Periode_m extends CI_Model
         $this->db->update('tb_periode_penilaian', ['status' => 'sedang dinilai'], ['id_periode' => $id_periode]);
     }
 
-    public function tambah_penilaian($id_periode)
+    public function tambah_penilaian($id_periode,$tgl_penilaian)
     {
 
         $data_pegawai = $this->db->get_where('tb_pegawai')->result_array(); //awas ganti
@@ -125,6 +157,7 @@ class Periode_m extends CI_Model
                 'periode_id' => $id_periode,
                 'pegawai_id' => $value['id_pegawai'],
                 'staff_id' => $value['staff_id'],
+                'tgl_penilaian' => $tgl_penilaian,
                 'status' => 0,
             ];
 

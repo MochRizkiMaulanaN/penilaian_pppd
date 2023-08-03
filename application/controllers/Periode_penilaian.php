@@ -22,6 +22,7 @@ class Periode_penilaian extends CI_Controller
 
         $data['staff'] = $this->Staff_m->tampil_staff();
         $data['periode'] = $this->Periode_m->tampil_periode();
+        $data['tahun'] = $this->Periode_m->tampil_periode_tahun();
         // $data['hapus_perusahaan'] = $this->Periode_penilaian_model->tampil_groupby();
         // $data['periode'] = $this->Periode_penilaian_model->tampil_periode();
         $data['title'] = 'Halaman Periode Penilaian';
@@ -51,11 +52,12 @@ class Periode_penilaian extends CI_Controller
     public function tambah()
     {
         if ($this->input->is_ajax_request()) {
-            $tgl_penilaian = $this->input->post('tgl_penilaian');
+            $tahun = $this->input->post('tahun');
             // $nama_staff = $this->input->post('nama_staff');
 
-            $cek = $this->Periode_m->cek_statusPeriode($tgl_penilaian);
-            if ($cek == true) {
+            //$cek = $this->Periode_m->cek_statusPeriode($tgl_penilaian);
+            $cek = $this->Periode_m->cek_statusPeriodeTahun($tahun);
+            if ($cek == false) {
                 $status = 0;
             } else {
                 $status = 1;
@@ -74,7 +76,7 @@ class Periode_penilaian extends CI_Controller
             $this->Periode_m->tambah_detail_periode($tgl_penilaian, $id_periode);
 
             //tambah data ke tabel penilaian
-            $this->Periode_m->tambah_penilaian($id_periode);
+            $this->Periode_m->tambah_penilaian($id_periode,$tgl_penilaian);
 
             $status = 1;
             echo json_encode($status);
@@ -115,7 +117,7 @@ class Periode_penilaian extends CI_Controller
     //     $this->load->view('periode_penilaian/detail_penilaian_staff', $data);
     //     $this->load->view('templates/footer');
     // }
-    
+
 
     public function detail_penilaian_akhir_staff($id_periode, $id_staff)
     {
@@ -138,17 +140,35 @@ class Periode_penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    // public function hapus()
+    // {
+    //     if ($this->input->is_ajax_request()) {
+    //         $id_periode = $this->input->post('id_periode');
+    //         $this->db->delete('tb_periode_penilaian', ['id_periode' => $id_periode]);
+
+    //         //hapus data detail periode penilaian berdasarkan id periode
+    //         $this->db->delete('tb_detail_periode', ['periode_id' => $id_periode]);
+
+    //         //hapus data penilaian berdasarkan id periode
+    //         $this->db->delete('tb_penilaian', ['periode_id' => $id_periode]);
+
+    //         $status = 1;
+    //         echo json_encode($status);
+    //     }
+    // }
+
     public function hapus()
     {
         if ($this->input->is_ajax_request()) {
-            $id_periode = $this->input->post('id_periode');
-            $this->db->delete('tb_periode_penilaian', ['id_periode' => $id_periode]);
+            $tahun = $this->input->post('tahun');
+
+            $this->db->delete('tb_periode_penilaian', ['YEAR(tgl_penilaian)' => $tahun]);
 
             //hapus data detail periode penilaian berdasarkan id periode
-            $this->db->delete('tb_detail_periode', ['periode_id' => $id_periode]);
+            $this->db->delete('tb_detail_periode', ['YEAR(tgl_penilaian)' => $tahun]);
 
             //hapus data penilaian berdasarkan id periode
-            $this->db->delete('tb_penilaian', ['periode_id' => $id_periode]);
+            $this->db->delete('tb_penilaian', ['YEAR(tgl_penilaian)' => $tahun]);
 
             $status = 1;
             echo json_encode($status);

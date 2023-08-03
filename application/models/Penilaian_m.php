@@ -12,7 +12,7 @@ class Penilaian_m extends CI_Model
         $this->db->join('tb_staff st', 'p.staff_id = st.id_staff');
         $this->db->join('tb_jabatan jb', 'pg.jabatan_id = jb.id_jabatan');
         $this->db->where('pg.staff_id', $id_staff);
-        $this->db->order_by('tgl_penilaian', 'desc');
+        $this->db->order_by('p.tgl_penilaian', 'desc');
         return $this->db->get()->result_array();
     }
 

@@ -34,6 +34,9 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_periode">
                                 <i class="fa fa-plus"></i> Tambah Data
                             </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_hapus_periode">
+                                <i class="fa fa-trash"></i> Hapus Data
+                            </button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -55,7 +58,7 @@
                                     foreach ($periode as $key => $value) { ?>
                                         <tr>
                                             <td><?= $no++; ?></td>
-                                            <td><?= date('d F Y', strtotime($value['tgl_penilaian']))  ?></td>
+                                            <td><?= date('F Y', strtotime($value['tgl_penilaian']))  ?></td>
                                             <td>
                                                 <?php if ($value['status'] == 'belum') { ?>
                                                     <span class="badge badge-danger">belum</span>
@@ -117,16 +120,16 @@
             </div>
             <div class="modal-body">
                 <form id="tambah_periode">
-
+                    <!-- 
                     <div class="form-group">
                         <label for="tgl_penilaian">Tanggal Penilaiain</label>
                         <input type="date" class="form-control" name="tgl_penilaian" id="tgl_penilaian">
-                    </div>
+                    </div> -->
 
 
-                    <!--<div class="form-group">
+                    <div class="form-group">
                         <label for="thn_periode">Tahun Periode</label>
-                        <select name="tahun" id="tahun" class="form-control select2">
+                        <select name="tahun" id="tahun" class="form-control select2_tambah">
                             <option value=""></option>
                             <?php
                             $now = date('Y');
@@ -134,7 +137,7 @@
                                 <option value="<?= $i ?>"><?= $i ?></option>
                             <?php endfor ?>
                         </select>
-                    </div> -->
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
@@ -148,27 +151,39 @@
 </div>
 <!-- /.modal -->
 
-<!-- modal ubah periode -->
-<div class="modal fade" id="modal_ubah_periode">
+<!-- modal hapus periode -->
+<div class="modal fade" id="modal_hapus_periode">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Ubah periode</h4>
+                <h4 class="modal-title">Hapus Tahun Periode</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="ubah_periode">
-                    <input type="hidden" id="id_periode_ubah">
+                <form id="hapus_periode">
+                    <!-- 
                     <div class="form-group">
-                        <label for="tgl_penilaian_ubah">Tanggal Penilaian</label>
-                        <input type="text" class="form-control" name="tgl_penilaian_ubah" id="tgl_penilaian_ubah">
+                        <label for="tgl_penilaian">Tanggal Penilaiain</label>
+                        <input type="date" class="form-control" name="tgl_penilaian" id="tgl_penilaian">
+                    </div> -->
+
+
+                    <div class="form-group">
+                        <label for="thn_periode">Tahun Periode</label>
+                        <select name="hapus_tahun" id="hapus_tahun" class="form-control select2_hapus">
+                            <option value=""></option>
+                            <?php foreach ($tahun as $key => $value) : ?>
+                                <option value="<?= date('Y', strtotime($value['tgl_penilaian'])) ?>"><?= date('Y', strtotime($value['tgl_penilaian'])) ?></option>
+                            <?php endforeach; ?>
+
+                        </select>
                     </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary">Tambahkan</button>
             </div>
             </form>
         </div>
@@ -181,7 +196,12 @@
 <script>
     $(function() {
         //Initialize Select2 Elements
-        $('.select2').select2({
+        $('.select2_tambah').select2({
+            placeholder: "Pilih Periode Tahun",
+            allowClear: true
+        })
+
+        $('.select2_hapus').select2({
             placeholder: "Pilih Periode Tahun",
             allowClear: true
         })
@@ -190,17 +210,12 @@
         $('#tambah_periode').validate({
             ignore: [],
             rules: {
-                tgl_penilaian: 'required',
-                nama_staff: 'required',
+                tahun: 'required',
 
             },
             messages: {
-                tgl_penilaian: {
-                    required: "Silahkan masukkan tanggal penilaian",
-                },
-                nama_staff: {
-                    required: "Silahkan pilih salah satu",
-
+                tahun: {
+                    required: "Silahkan masukkan tahun periode",
                 },
 
 
@@ -218,25 +233,73 @@
             },
 
             submitHandler: function() {
-                tgl_penilaian = $('#tgl_penilaian').val()
-                nama_staff = $('#nama_staff').val()
+                tahun = $('#tahun').val()
 
-                //console.log(nama_pengguna, email_pengguna, role_pengguna, password)
                 $.ajax({
                     method: 'post',
                     url: '<?= base_url('Periode_penilaian/tambah') ?>',
                     data: {
-                        tgl_penilaian: tgl_penilaian,
-                        nama_staff: nama_staff
+                        tahun: tahun,
                     },
                     dataType: 'json',
                     success: function(status) {
+                        console.log(status)
                         if (status == 1) {
                             $('#modal_tambah_periode').hide()
                             swall('Ditambahkan')
                         } else {
                             $('#modal_tambah_periode').hide()
                             swall_gagal('Ditambahkan')
+                        }
+                    }
+                })
+            }
+
+        });
+
+        $('#hapus_periode').validate({
+            ignore: [],
+            rules: {
+                hapus_tahun: 'required',
+
+            },
+            messages: {
+                hapus_tahun: {
+                    required: "Silahkan masukkan tahun periode",
+                },
+
+
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            },
+
+            submitHandler: function() {
+                tahun = $('#hapus_tahun').val()
+
+                $.ajax({
+                    method: 'post',
+                    url: '<?= base_url('Periode_penilaian/hapus') ?>',
+                    data: {
+                        tahun: tahun,
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        console.log(status)
+                        if (status == 1) {
+                            $('#modal_hapus_periode').hide()
+                            swall('Dihapus')
+                        } else {
+                            $('#modal_hapus_periode').hide()
+                            swall_gagal('Dihapus')
                         }
                     }
                 })
@@ -338,7 +401,7 @@
         Swal.fire({
             icon: 'error',
             title: 'Data Gagal ' + $title,
-            text: "Tanggal periode penilaian gagal ditambahkan !!",
+            text: "Periode penilaian gagal ditambahkan !!",
             showConfirmButton: true,
             confirmButtonText: 'Ok',
         }).then((result) => {

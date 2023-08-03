@@ -33,17 +33,65 @@ class Pengguna extends CI_Controller
 
     public function profile()
     {
-
         $nip_pengguna = $this->session->userdata('nip_pengguna');
 
-        $data['title'] = 'Halaman Profile';
-        $data['pengguna'] = $this->Pengguna_m->tampil_pengguna_nip($nip_pengguna);
+        $this->form_validation->set_rules('password_now', 'Password', 'required|trim', [
+            'required' => 'password tidak boleh kosong',
+        ]);
+        $this->form_validation->set_rules('password_new', 'Password', 'required|trim', [
+            'required' => 'password tidak boleh kosong',
+        ]);
+        $this->form_validation->set_rules('password_konf', 'Password', 'required|trim|matches[password_new]', [
+            'required' => 'password tidak boleh kosong',
+            'matches' => 'password harus sama'
+        ]);
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/navbar');
-        $this->load->view('templates/sidebar');
-        $this->load->view('pengguna/profile', $data);
-        $this->load->view('templates/footer');
+
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'Halaman Profile';
+            $data['pengguna'] = $this->Pengguna_m->tampil_pengguna_nip($nip_pengguna);
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/navbar');
+            $this->load->view('templates/sidebar');
+            $this->load->view('pengguna/profile', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $nip = $this->input->post('nip');
+            $password_now = $this->input->post('password_now');
+            $password_new = $this->input->post('password_new');
+
+
+            $cek_pengguna = $this->db->get_where('tb_pengguna', ['nip_pengguna' => $nip])->row_array();
+
+            if ($cek_pengguna) {
+                //cek password sekarang
+                $cek_password_now = $this->db->get_where('tb_pengguna', ['password' => $password_now])->row_array();
+
+                if ($cek_password_now) {
+                    $data = [
+                        'password' => $password_new
+                    ];
+
+                    $this->db->update('tb_pengguna', $data, ['nip_pengguna' => $nip]);
+
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+               Password berhasil diubah.
+              </div>');
+                    redirect('Pengguna/profile');
+                } else {
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+               Password sekarang salah.
+              </div>');
+                    redirect('Pengguna/profile');
+                }
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+               Pengguna tidak terdaftar.
+              </div>');
+                redirect('Pengguna/profile');
+            }
+        }
     }
 
     public function tambah()
@@ -119,42 +167,57 @@ class Pengguna extends CI_Controller
         }
     }
 
-    public function ubah_katasandi()
-	{
-		if (!$this->session->userdata('nip_pengguna')) {
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
-                Login Terlebih Dahulu!
-               </div>');
-            redirect('Autentikasi');
-        }
+    public function ubah_password()
+    {
 
-		$this->form_validation->set_rules('password1', 'Password', 'required|trim|matches[password2]', [
-			'required' => 'Katasandi tidak boleh kosong',
-			'matches' => 'Katasandi harus sama'
-		]);
-		$this->form_validation->set_rules('password2', 'Ulangi Password', 'required|trim|matches[password1]', [
-			'required' => 'Katasandi tidak boleh kosong',
-			'matches' => 'Katasandi harus sama'
-		]);
+        $this->form_validation->set_rules('password_now', 'Password', 'required|trim', [
+            'required' => 'password tidak boleh kosong',
+        ]);
+        $this->form_validation->set_rules('password_new', 'Password', 'required|trim|matches[password_konf]', [
+            'required' => 'password tidak boleh kosong',
+        ]);
+        $this->form_validation->set_rules('password_konf', 'Password', 'required|trim|matches[password_new]', [
+            'required' => 'password tidak boleh kosong',
+            'matches' => 'password harus sama'
+        ]);
 
-		if ($this->form_validation->run() == false) {
-			$data['title'] = 'Ubah Katasandi';
-			$this->load->view('templates/header', $data);
-			$this->load->view('templates/header');
-			$this->load->view('templates/header');
-			$this->load->view('pengguna/ubah_katasandi');
-			$this->load->view('templates/footer_login');
-		} else {
-			$email = $this->session->userdata('reset_email');
-			$katasandi = $this->input->post('password1');
 
-			$this->db->update('tb_pengguna', ['katasandi' => $katasandi], ['email' => $email]);
+        if ($this->form_validation->run() == false) {
+            $nip_pengguna = $this->session->userdata('nip_pengguna');
 
-			$this->session->unset_userdata('reset_email');
-			$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
-               Katasandi berhasil diubah! Silahkan Login.
+            $data['title'] = 'Halaman Profile';
+            $data['pengguna'] = $this->Pengguna_m->tampil_pengguna_nip($nip_pengguna);
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/navbar');
+            $this->load->view('templates/sidebar');
+            $this->load->view('pengguna/profile', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $nip = $this->input->post('nip');
+            $password_now = $this->input->post('password_now');
+            $password_new = $this->input->post('password_new');
+
+
+            $cek_pengguna = $this->db->get_where('tb_pengguna', ['nip_pengguna' => $nip])->row_array();
+
+            if ($cek_pengguna) {
+                //cek password sekarang
+                $cek_password_now = $this->db->get_where('tb_pengguna', ['password' => $password_now])->row_array();
+
+                if ($cek_password_now) {
+                    $data = [
+                        'password' => $password_new
+                    ];
+
+                    $this->db->update('tb_pengguna', $data, ['nip_pengguna' => $nip]);
+                }
+            }
+
+
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+               Password berhasil diubah.
               </div>');
-			redirect('Autentikasi');
-		}
-	}
+            redirect('Pengguna/profile');
+        }
+    }
 }
