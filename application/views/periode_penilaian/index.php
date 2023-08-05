@@ -34,9 +34,6 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah_periode">
                                 <i class="fa fa-plus"></i> Tambah Data
                             </button>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_hapus_periode">
-                                <i class="fa fa-trash"></i> Hapus Data
-                            </button>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

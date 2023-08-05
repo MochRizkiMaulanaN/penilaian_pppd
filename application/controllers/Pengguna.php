@@ -69,16 +69,23 @@ class Pengguna extends CI_Controller
                 $cek_password_now = $this->db->get_where('tb_pengguna', ['password' => $password_now])->row_array();
 
                 if ($cek_password_now) {
-                    $data = [
-                        'password' => $password_new
-                    ];
+                    if ($password_new == $password_now) {
+                        $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+                   Masukkan password baru.
+                  </div>');
+                        redirect('Pengguna/profile');
+                    } else {
+                        $data = [
+                            'password' => $password_new
+                        ];
 
-                    $this->db->update('tb_pengguna', $data, ['nip_pengguna' => $nip]);
+                        $this->db->update('tb_pengguna', $data, ['nip_pengguna' => $nip]);
 
-                    $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
-               Password berhasil diubah.
-              </div>');
-                    redirect('Pengguna/profile');
+                        $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+                   Password berhasil diubah.
+                  </div>');
+                        redirect('Pengguna/profile');
+                    }
                 } else {
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
                Password sekarang salah.

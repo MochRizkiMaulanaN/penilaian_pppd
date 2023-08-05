@@ -160,15 +160,15 @@ class Periode_penilaian extends CI_Controller
     public function hapus()
     {
         if ($this->input->is_ajax_request()) {
-            $tahun = $this->input->post('tahun');
+            $id_periode = $this->input->post('id_periode');
 
-            $this->db->delete('tb_periode_penilaian', ['YEAR(tgl_penilaian)' => $tahun]);
+            $this->db->delete('tb_periode_penilaian', ['id_periode' => $id_periode]);
 
             //hapus data detail periode penilaian berdasarkan id periode
-            $this->db->delete('tb_detail_periode', ['YEAR(tgl_penilaian)' => $tahun]);
+            $this->db->delete('tb_detail_periode', ['periode_id' => $id_periode]);
 
             //hapus data penilaian berdasarkan id periode
-            $this->db->delete('tb_penilaian', ['YEAR(tgl_penilaian)' => $tahun]);
+            $this->db->delete('tb_penilaian', ['periode_id' => $id_periode]);
 
             $status = 1;
             echo json_encode($status);
