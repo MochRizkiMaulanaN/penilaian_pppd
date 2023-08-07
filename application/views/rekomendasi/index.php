@@ -58,6 +58,8 @@
                                             <td><?= $value['nama_jabatan'] ?></td>
                                             <td>
                                                 <a href="<?= base_url('Rekomendasi/detail/') . $value['jabatan_id'] . '/' . $value['periode_tahun'] ?>" class="btn btn-primary btn-sm btn_lihat"><i class="fas fa-solid fa-eye"></i></a>
+
+                                                <button class="btn btn-danger btn-sm btn_hapus" data-jabatanid="<?= $value['jabatan_id'] ?>" data-tahun="<?= $value['periode_tahun'] ?>"><i class="fas fa-solid fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     <?php }
@@ -77,58 +79,53 @@
 </div>
 <!-- /.content-wrapper -->
 
-<!-- Modal tambah -->
-<div class="modal fade" id="modal_tambah" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form id="form" method="post">
-                    <div class="form-group">
-                        <label for="kuota">Kuota Pegawai Perpanjangan</label>
-                        <input type="number" class="form-control" name="kuota">
-                        <small class="form-text text-danger" id="kuota_error"></small>
-                    </div>
-                    <div class="form-group">
-                        <label for="jabatan">Jabatan</label>
-                        <?php foreach ($nama_jabatan as $key => $value) { ?>
-                            <option value="<?= $value['id_jabatan']; ?>"><?= $value['nama_jabatan']; ?></option>
-                        <?php } ?>
-                        <small class="form-text text-danger" id="jabatan_error"></small>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Tambahkan</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
+<script>
+    $('.btn_hapus').click(function() {
+        jabatan_id = $(this).data('jabatanid');
+        tahun = $(this).data('tahun');
+        hapus(jabatan_id,tahun)
+    })
 
-<!-- Modal tambah rekomendasi -->
-<div class="modal fade" id="modal_tambah_rekomendasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form id="form" method="post" action="<?= base_url('Rekomendasi/tambah_rekomendasi') ?>">
-                    <div class="form-group">
-                        <label for="tahun">Periode Tahun</label>
-                        <select class="select2-single-placeholder form-control" name="tahun">
-                            <option value="">Pilih Tahun</option>
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            <option value="2019">2019</option>
-                        </select>
-                        <small class="form-text text-danger" id="jabatan_error"><?= form_error('tahun') ?></small>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Tambahkan</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
+    function swall($title) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Data Berhasil ' + $title,
+            showConfirmButton: false,
+            timer: 1500
+        }).then((result) => {
+            location.href = '<?= base_url('Rekomendasi') ?>';
+        })
+
+    }
+
+    function hapus(jabatan_id,tahun) {
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "ingin menghapus data ini",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'POST',
+                    url: '<?= base_url('Rekomendasi/hapus')  ?>',
+                    data: {
+                        jabatan_id: jabatan_id,
+                        tahun: tahun
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        if (status == 1) {
+                            swall('Dihapus')
+                        }
+                    }
+
+                })
+            }
+        })
+    }
+</script>

@@ -143,10 +143,10 @@ class Periode_m extends CI_Model
         $this->db->update('tb_periode_penilaian', ['status' => 'sedang dinilai'], ['id_periode' => $id_periode]);
     }
 
-    public function tambah_penilaian($id_periode,$tgl_penilaian)
+    public function tambah_penilaian($id_periode, $tgl_penilaian)
     {
 
-        $data_pegawai = $this->db->get_where('tb_pegawai')->result_array(); //awas ganti
+        $data_pegawai = $this->db->get_where('tb_pegawai', ['status_pegawai' => 1])->result_array();
 
         // if (!$data_pegawai) {
         //     return true;
@@ -209,7 +209,7 @@ class Periode_m extends CI_Model
 
         $vektors_pg = 1;
         foreach ($subkriteria as $key => $value) {
-            $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
+            $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
         }
 
         // var_dump($vektors_pg);

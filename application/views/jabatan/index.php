@@ -55,6 +55,8 @@
                                             <td><?= $value['nama_jabatan'] ?></td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm btn_hapus" data-id="<?= $value['id_jabatan'] ?>"><i class="fas fa-solid fa-trash"></i></button>
+
+                                                <button class="btn btn-warning btn-sm btn_ubah" data-id="<?= $value['id_jabatan'] ?>" data-toggle="modal" data-target="#modal_ubah_jabatan"><i class="fas fa-solid fa-pencil-alt"></i></button>
                                             </td>
                                         </tr>
                                     <?php }
@@ -89,6 +91,36 @@
                     <div class="form-group">
                         <label for="nama_jabatan">Nama Jabatan</label>
                         <input type="text" class="form-control" name="nama_jabatan" id="nama_jabatan">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Tambahkan</button>
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- modal ubah jabatan -->
+<div class="modal fade" id="modal_ubah_jabatan">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ubah Jabatan</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="ubah_jabatan">
+                    <input type="hidden" id="id_jabatan_ubah">
+                    <div class="form-group">
+                        <label for="nama_jabatan_ubah">Nama Jabatan</label>
+                        <input type="text" class="form-control" name="nama_jabatan_ubah" id="nama_jabatan_ubah">
                     </div>
             </div>
             <div class="modal-footer">
@@ -162,9 +194,61 @@
 
         });
 
+        $('#ubah_jabatan').validate({
+            ignore: [],
+            rules: {
+                nama_jabatan_ubah: 'required'
+
+            },
+            messages: {
+                nama_jabatan_ubah: {
+                    required: "Silahkan masukkan nama jabatan",
+                }
+
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            },
+
+            submitHandler: function() {
+                id_jabatan = $('#id_jabatan_ubah').val()
+                nama_jabatan = $('#nama_jabatan_ubah').val()
+
+                $.ajax({
+                    method: 'post',
+                    url: '<?= base_url('Jabatan/ubah') ?>',
+                    data: {
+                        id_jabatan: id_jabatan,
+                        nama_jabatan: nama_jabatan,
+                    },
+                    dataType: 'json',
+                    success: function(status) {
+                        if (status == 1) {
+                            $('#modal_ubah_jabatan').hide()
+                            swall('Diubah')
+                        }
+                    }
+                })
+            }
+
+        });
+
         $('.btn_hapus').click(function() {
             id = $(this).data('id');
             hapus(id)
+        })
+
+        $('.btn_ubah').click(function() {
+            id = $(this).data('id');
+            tampil_jabatan_id(id)
         })
 
     });
@@ -179,6 +263,26 @@
             location.href = '<?= base_url('Jabatan') ?>';
         })
 
+    }
+
+    function tampil_jabatan_id(id) {
+        $.ajax({
+            method: 'POST',
+            url: '<?= base_url('Jabatan/tampil_jabatan_id')  ?>',
+            data: {
+                id_jabatan: id,
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.status == 1) {
+                    $('#id_jabatan_ubah').val(data.id_jabatan)
+                    $('#nama_jabatan_ubah').val(data.nama_jabatan)
+                
+
+                }
+            }
+
+        })
     }
 
     function hapus(id) {

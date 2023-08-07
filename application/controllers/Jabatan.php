@@ -40,6 +40,32 @@ class Jabatan extends CI_Controller
         }
     }
 
+    public function tampil_jabatan_id()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_jabatan = $this->input->post('id_jabatan');
+            $jabatan = $this->db->get_where('tb_jabatan',['id_jabatan'=>$id_jabatan])->row_array();
+
+            $data = [
+                'id_jabatan' => $jabatan['id_jabatan'],
+                'nama_jabatan' => $jabatan['nama_jabatan'],
+                'status' => 1
+            ];
+            echo json_encode($data);
+        }
+    }
+
+    public function ubah()
+    {
+        if ($this->input->is_ajax_request()) {
+            $nama_jabatan = $this->input->post('nama_jabatan');
+            $id_jabatan = $this->input->post('id_jabatan');
+            $this->db->update('tb_jabatan', ['nama_jabatan' => $nama_jabatan],['id_jabatan'=>$id_jabatan]);
+            $status = 1;
+            echo json_encode($status);
+        }
+    }
+
 
     public function hapus()
     {

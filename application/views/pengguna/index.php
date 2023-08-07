@@ -221,7 +221,10 @@
         $('#tambah_pengguna').validate({
             ignore: [],
             rules: {
-                nama_pengguna: 'required',
+                nama_pengguna: {
+                    required: true,
+                    alpha: true
+                },
                 nip_pengguna: {
                     required: true,
                     number: true,

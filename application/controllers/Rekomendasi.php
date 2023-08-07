@@ -88,7 +88,7 @@ class Rekomendasi extends CI_Controller
 
             //update masa kontrak
             $this->db->update('tb_pegawai', ['akhir_kontrak' => $AkhirKontrak_berikutnya], ['nip_pegawai' => $nip]);
-           
+
 
             //hapus pegawai di tabel rekomendasi
             $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
@@ -106,12 +106,28 @@ class Rekomendasi extends CI_Controller
 
             //update status pegawai menjadi non aktif
             $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['nip_pegawai' => $nip]);
-           
+
             //hapus pegawai di tabel rekomendasi
             $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
 
             $data['status'] = 1;
             echo json_encode($data);
+        }
+    }
+
+    public function hapus()
+    {
+        if ($this->input->is_ajax_request()) {
+            $jabatan_id = $this->input->post('jabatan_id');
+            $tahun = $this->input->post('tahun');
+
+            //hapus data rekomendasi berdasarkan jabatan_id dan tahun
+            $this->db->where('jabatan_id', $jabatan_id);
+            $this->db->where('periode_tahun', $tahun);
+            $this->db->delete('tb_Rekomendasi');
+
+            $status = 1;
+            echo json_encode($status);
         }
     }
 }

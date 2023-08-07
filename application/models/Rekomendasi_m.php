@@ -44,19 +44,28 @@ class Rekomendasi_m extends CI_Model
 
         $vektors_pg = 1;
         foreach ($subkriteria as $key => $value) {
-            $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
+            $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
         }
         //var_dump($vektors_pg);die;
 
-        $this->db->select('*,SUM(vektor_s) AS jumlah');
+        // $this->db->select('*,SUM(vektor_s) AS jumlah');
+        // $this->db->from('tb_hasil_penilaian hp');
+        // $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
+        // $this->db->where('jabatan_id', $jabatan);
+        // $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
+        // $this->db->group_by('hp.jabatan_id');
+        // $jumlah_vektors = $this->db->get()->row_array();
+
         $this->db->from('tb_hasil_penilaian hp');
         $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
         $this->db->where('jabatan_id', $jabatan);
         $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
-        $this->db->group_by('hp.jabatan_id');
         $jumlah_vektors = $this->db->get()->row_array();
 
-
+        $vektorv_pg = 0;
+        foreach ($jumlah_vektors as $key => $value) {
+            
+        }
 
         $passing_grade = $jumlah_vektors['jumlah'] / $vektors_pg;
 

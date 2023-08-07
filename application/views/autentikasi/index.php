@@ -11,7 +11,7 @@
             } ?>
             <form action="<?= base_url('Autentikasi') ?>" method="post">
                 <div class="input-group mb-3">
-                    <input type="number" name="nip_pengguna" class="form-control" placeholder="NIP">
+                    <input type="text" name="nip_pengguna" class="form-control" placeholder="NIP">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>

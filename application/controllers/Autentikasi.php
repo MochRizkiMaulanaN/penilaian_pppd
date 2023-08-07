@@ -12,9 +12,10 @@ class Autentikasi extends CI_Controller
 
 	public function index()
 	{
-		$this->form_validation->set_rules('nip_pengguna', 'NIP', 'required|trim|exact_length[8]', [
+		$this->form_validation->set_rules('nip_pengguna', 'NIP', 'required|trim|exact_length[8]|numeric', [
 			'required' => 'NIP tidak boleh kosong',
-			'exact_length' => 'NIP harus 8 digit angka'
+			'exact_length' => 'NIP harus 8 digit angka',
+			'numeric' => 'NIP harus berupa angka'
 		]);
 		$this->form_validation->set_rules('password', 'Passoword', 'required|trim', [
 			'required' => 'Password tidak boleh kosong'
@@ -29,42 +30,6 @@ class Autentikasi extends CI_Controller
 		}
 	}
 
-	public function registrasi()
-	{
-		$this->form_validation->set_rules('nama_lengkap', 'Nama', 'required|trim', [
-			'required' => 'Nama tidak boleh kosong'
-		]);
-		$this->form_validation->set_rules('nip_pengguna', 'NIP', 'required|trim|exact_length[8]|is_unique[tb_pengguna.nip_pengguna]', [
-			'required' => 'NIP tidak boleh kosong',
-			'exact_length' => 'NIP harus 8 digit angka',
-			'is_unique' => 'NIP sudah ada'
-		]);
-		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email', [
-			'required' => 'Email tidak boleh kosong',
-			'valid_email' => 'Email tidak valid'
-		]);
-		$this->form_validation->set_rules('password', 'Password', 'required|trim', [
-			'required' => 'Password tidak boleh kosong'
-		]);
-
-		$this->form_validation->set_rules('konf_password', 'Konfirmasi Password', 'required|trim|matches[password]', [
-			'required' => 'Konfirmasi Password tidak boleh kosong',
-			'matches' => 'Password tidak sama',
-		]);
-
-		if ($this->form_validation->run() == false) {
-			$data['title'] = 'Halaman Registrasi';
-			$this->load->view('templates/header_login', $data);
-			$this->load->view('autentikasi/registrasi');
-			$this->load->view('templates/footer_login');
-		} else {
-			$this->Pengguna_m->tambah_registrasi();
-			$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
-                Akun telah dibuat, silahkan login!
-               </div>');
-			redirect('Autentikasi');
-		}
-	}
 
 	public function masuk()
 	{
