@@ -40,6 +40,19 @@ class Laporan_penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function detail_penilaian_pegawai($pegawai_id, $periode_tahun)
+    {
+        $data['title'] = 'Halaman Detail Penilaian';
+        $data['detail_penilaian_pegawai'] = $this->Laporan_m->detail_penilaian_pegawai($pegawai_id, $periode_tahun);
+        $data['pegawai_id'] = $pegawai_id;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/detail_laporan_penilaian_pegawai', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function tampil_penilaian_staff($id_staff)
     {
         $data['title'] = 'Halaman Laporan Penilaian';
@@ -49,6 +62,20 @@ class Laporan_penilaian extends CI_Controller
         $this->load->view('templates/navbar');
         $this->load->view('templates/sidebar');
         $this->load->view('laporan_penilaian/laporan_penilaian_staff', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function detail_penilaian_staff($staff_id, $periode_tahun, $jabatan_id, $nama_jabatan)
+    {
+        $data['title'] = 'Halaman Detail Penilaian';
+        $data['detail_penilaian_staff'] = $this->Laporan_m->detail_penilaian_staff($staff_id, $periode_tahun, $jabatan_id);
+        $data['jabatan'] = $nama_jabatan;
+        $data['staff_id'] = $staff_id;
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/detail_laporan_penilaian_staff', $data);
         $this->load->view('templates/footer');
     }
 

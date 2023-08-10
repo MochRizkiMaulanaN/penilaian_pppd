@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Hasil Penilaian</h1>
+                    <h1 class="m-0">Detail Hasil Penilaian</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Hasil Penilaian</li>
+                        <li class="breadcrumb-item active">Detail Hasil Penilaian</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,6 +31,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
+                        <a href="<?= base_url('Laporan_penilaian/tampil_penilaian_pegawai/' . $pegawai_id) ?>" class="btn btn-warning text-white">Kembali</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -38,27 +39,19 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tahun</th>
-                                        <th>Jabatan</th>
-                                        <th>Aksi</th>
+                                        <th>Tanggal Periode</th>
+                                        <th>Nilai Akhir</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $no = 1;
-                                    foreach ($laporan as $key => $value) {
-                                        $nama_jabatan = $value['nama_jabatan'];
-                                        $staff_id = $value['staff_id'];
-                                        $jabatan_id = $value['jabatan_id'];
-                                        $periode_tahun = $value['periode_tahun'];
+                                    foreach ($detail_penilaian_pegawai as $key => $value) {
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $periode_tahun ?></td>
-                                            <td><?= $nama_jabatan ?></td>
-                                            <td>
-                                                <a href="<?= base_url('Laporan_penilaian/detail_penilaian_staff/' . $staff_id . '/' . $periode_tahun . '/' . $jabatan_id . '/' . $nama_jabatan) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
-                                            </td>
+                                            <td><?= date('F Y', strtotime($value['tgl_periode'])) ?></td>
+                                            <td><?= $value['nilai_akhir'] ?></td>
                                         </tr>
                                     <?php }
                                     ?>

@@ -61,6 +61,7 @@
 
                                                 <button class="btn btn-danger btn-sm btn_hapus" data-jabatanid="<?= $value['jabatan_id'] ?>" data-tahun="<?= $value['periode_tahun'] ?>"><i class="fas fa-solid fa-trash"></i></button>
                                             </td>
+                                            
                                         </tr>
                                     <?php }
                                     ?>
@@ -83,7 +84,7 @@
     $('.btn_hapus').click(function() {
         jabatan_id = $(this).data('jabatanid');
         tahun = $(this).data('tahun');
-        hapus(jabatan_id,tahun)
+        hapus(jabatan_id, tahun)
     })
 
     function swall($title) {
@@ -98,7 +99,7 @@
 
     }
 
-    function hapus(jabatan_id,tahun) {
+    function hapus(jabatan_id, tahun) {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "ingin menghapus data ini",

@@ -39,20 +39,22 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Tahun</th>
-                                        <th>Nilai Akhir</th>
-                                        <th>Jabatan</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $no = 1;
                                     foreach ($laporan as $key => $value) {
+                                        $periode_tahun = $value['periode_tahun'];
+                                        $pegawai_id = $value['pegawai_id'];
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $value['periode_tahun'] ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
-                                            <td><?= $value['nama_jabatan'] ?></td>
+                                            <td><?= $periode_tahun ?></td>
+                                            <td>
+                                            <a href="<?= base_url('Laporan_penilaian/detail_penilaian_pegawai/' . $pegawai_id . '/' . $periode_tahun) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
+                                            </td>
                                         </tr>
                                     <?php }
                                     ?>

@@ -35,48 +35,59 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <!--<strong>Jabatan : <?= rawurldecode($nama_jabatan); ?></strong> -->
-                            <table id="example1" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>NIP</th>
-                                        <th>Nama</th>
-                                        <th>Nilai Akhir</th>
-                                        <th>Ranking</th>
-                                        <th>Rekomendasi</th>
-                                        <th>Keterangan</th>
-                                        <th>Akhir Kontrak</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $no = 1;
-                                    foreach ($rekomendasi as $key => $value) { ?>
+                            <form action="<?= base_url('Rekomendasi/keputusan') ?>" method="post" onsubmit="konfirmasi()">
+                                <!--<strong>Jabatan : <?= rawurldecode($nama_jabatan); ?></strong> -->
+                                <table id="example1" class="table table-bordered table-hover">
+                                    <thead>
                                         <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $value['nip_pegawai'] ?></td>
-                                            <td><?= $value['nama_pegawai'] ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
-                                            <td><?= $value['ranking'] ?></td>
-                                            <td><?= $value['rekomendasi'] ?></td>
-                                            <td><?= $value['keterangan'] ?></td>
-                                            <td><?= date('d F Y', strtotime($value['akhir_kontrak'])) ?></td>
-                                            <td>
+                                            <th>#</th>
+                                            <th>NIP</th>
+                                            <th>Nama</th>
+                                            <th>Nilai Akhir</th>
+                                            <th>Ranking</th>
+                                            <th>Rekomendasi</th>
+                                            <th>Keterangan</th>
+                                            <th>Akhir Kontrak</th>
+                                            <!-- <th>Aksi</th> -->
+                                            <th>Pemutusan</th>
+                                            <th>Perpanjangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $no = 1;
+                                        foreach ($rekomendasi as $key => $value) {
+                                            $id_pegawai = $value['id_pegawai']; ?>
+                                            <tr>
+                                                <td><?= $no++ ?></td>
+                                                <td><?= $value['nip_pegawai'] ?></td>
+                                                <td><?= $value['nama_pegawai'] ?></td>
+                                                <td><?= $value['nilai_akhir'] ?></td>
+                                                <td><?= $value['ranking'] ?></td>
+                                                <td><?= $value['rekomendasi'] ?></td>
+                                                <td><?= $value['keterangan'] ?></td>
+                                                <td><?= date('d F Y', strtotime($value['akhir_kontrak'])) ?></td>
+                                                <!-- <td>
 
                                                 <button class="btn btn-success btn-sm btn_perpanjangan" data-nip="<?= $value['nip_pegawai'] ?>" data-nama="<?= $value['nama_pegawai'] ?>" data-id="<?= $value['pegawai_id'] ?>">Perpanjangan</button>
 
                                                 <button class="btn btn-danger btn-sm btn_pemutusan" data-nip="<?= $value['nip_pegawai'] ?>" data-nama="<?= $value['nama_pegawai'] ?>" data-id="<?= $value['pegawai_id'] ?>"> Pemutusan</button>
 
-                                            </td>
-                                        </tr>
-                                    <?php }
-                                    ?>
-                                </tbody>
-                            </table>
-                            <!-- <p>Tekan tombol, jika ingin semua pegawai dengan keterangan perpanjangan kontrak diperpanjang :</p>
-                            <button class="btn btn-success btn_perpanjangan_semua" data-idstaff=""><i class="fas fa-solid fa-check "></i> Selesai</button> -->
+                                            </td> -->
+                                                <input type="hidden" name="id_pegawai[]" value="<?= $id_pegawai ?>">
+                                                <td>
+                                                    <input type="radio" name="keputusan[<?= $id_pegawai ?>]" value="0" style="width: 100%; height: 2em; border: 0px;">
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="keputusan[<?= $id_pegawai ?>]" value="1" style="width: 100%; height: 2em; border: 0px;">
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <button type="submit" class="btn btn-success btn_keputusan"><i class="fas fa-solid fa-check "></i> Selesai</button>
+                            </form>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -91,18 +102,22 @@
 <!-- /.content-wrapper -->
 
 <script>
+    function konfirmasi() {
+        return confirm('Apakah anda yakin ingin perpanjangan atau pemutusan kontrak pada data yang dipilih?')
+    }
+
     $('.btn_perpanjangan').click(function() {
         nip = $(this).data('nip')
         nama = $(this).data('nama')
         id = $(this).data('id')
-        perpanjangan(nip, nama,id)
+        perpanjangan(nip, nama, id)
     })
 
     $('.btn_pemutusan').click(function() {
         nip = $(this).data('nip')
         nama = $(this).data('nama')
         id = $(this).data('id')
-        pemutusan(nip, nama,id)
+        pemutusan(nip, nama, id)
     })
 
     function swall($title) {
@@ -117,7 +132,7 @@
 
     }
 
-    function perpanjangan(nip, nama,id) {
+    function perpanjangan(nip, nama, id) {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Pegawai dengan nama " + nama + " akan perpanjangan masa kontrak",
@@ -148,7 +163,7 @@
         })
     }
 
-    function pemutusan(nip, nama,id) {
+    function pemutusan(nip, nama, id) {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Pegawai dengan nama " + nama + " tidak diperpanjang masa kontrak",

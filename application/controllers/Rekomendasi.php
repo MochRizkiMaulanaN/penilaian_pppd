@@ -60,6 +60,14 @@ class Rekomendasi extends CI_Controller
         }
     }
 
+    public function keputusan()
+    {
+        foreach ($_POST['id_pegawai'] as $key => $id_pegawai) {
+            echo $id_pegawai."<br>";
+        }
+        die;
+    }
+
     public function detail($jabatan_id, $periode_tahun)
     {
         $this->db->from('tb_rekomendasi r');
