@@ -76,10 +76,10 @@
                                             </td> -->
                                                 <input type="hidden" name="id_pegawai[]" value="<?= $id_pegawai ?>">
                                                 <td>
-                                                    <input type="radio" name="keputusan[<?= $id_pegawai ?>]" value="0" style="width: 100%; height: 2em; border: 0px;">
+                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="0" style="width: 100%; height: 2em; border: 0px;">
                                                 </td>
                                                 <td>
-                                                    <input type="radio" name="keputusan[<?= $id_pegawai ?>]" value="1" style="width: 100%; height: 2em; border: 0px;">
+                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="1" style="width: 100%; height: 2em; border: 0px;">
                                                 </td>
                                             </tr>
                                         <?php }

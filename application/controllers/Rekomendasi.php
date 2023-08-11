@@ -63,7 +63,7 @@ class Rekomendasi extends CI_Controller
     public function keputusan()
     {
         foreach ($_POST['id_pegawai'] as $key => $id_pegawai) {
-            echo $id_pegawai."<br>";
+            echo $id_pegawai . ' : ' . $_POST['keputusan' . $id_pegawai].'<br>';
         }
         die;
     }

@@ -205,6 +205,7 @@ class Periode_m extends CI_Model
 
         $jumlah_vektors = $this->db->query("SELECT SUM(vektor_s) AS jumlah, jabatan_id FROM tb_hasil_penilaian WHERE periode_id = {$id_periode} GROUP BY jabatan_id ORDER BY jabatan_id ASC ")->result_array();
 
+
         $subkriteria = $this->db->get('tb_subkriteria')->result_array();
 
         $vektors_pg = 1;
@@ -212,11 +213,6 @@ class Periode_m extends CI_Model
             $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
         }
 
-        // var_dump($vektors_pg);
-        // die;
-
-
-        // $passing_grade = $vektors_pg / $total_vektors;
 
         //hitung vektor v dari masing - masing pegawai
         $hasil = $this->db->get_where('tb_hasil_penilaian', ['periode_id' => $id_periode])->result_array();
@@ -229,12 +225,15 @@ class Periode_m extends CI_Model
             foreach ($jumlah_vektors as $key => $value_vs) {
                 if ($jabatan_id == $value_vs['jabatan_id']) {
                     $vektor_v = $vektor_s / $value_vs['jumlah'];
-                    $passing_grade = $value_vs['jumlah'] / $vektors_pg;
+                    $passing_grade =$vektors_pg /$value_vs['jumlah'] ;
+                    
                 }
             }
 
+            // var_dump($pegawai_id,$passing_grade);
 
-            //update nilai vektor v
+
+            //update nilai vektor v 
             $this->db->where('periode_id', $id_periode);
             $this->db->where('pegawai_id', $pegawai_id);
             $this->db->update('tb_hasil_penilaian', ['vektor_v' => $vektor_v]);
@@ -250,13 +249,9 @@ class Periode_m extends CI_Model
                 'staff_id' => $staff_id['staff_id'],
                 'tgl_periode' => $tgl_periode['tgl_penilaian'],
                 'nilai_akhir' => $vektor_v,
+                'passing_grade' => $passing_grade //kolom baru
             ];
             $this->db->insert('tb_nilai_akhir', $data);
-
-            //update nilai dan passing grade di tabel penilaian 
-            // $this->db->where('periode_id', $id_periode);
-            // $this->db->where('pegawai_id', $pegawai_id);
-            // $this->db->update('tb_penilaian', ['nilai' => $vektor_v, 'passing_grade' => $passing_grade ]);
 
             //cek apakah pegawai sudah dilakukan penilaian sebanyak 4 kali (akan dimasukkan ke tabel laporan penilaian)
             $this->db->from('tb_nilai_akhir');
@@ -276,11 +271,6 @@ class Periode_m extends CI_Model
                     $nilai_akhir_pegawai += $value['nilai_akhir'];
                 }
 
-                // if ($nilai_akhir_pegawai > $passing_grade) {
-                //     $keterangan = 'Perpanjangan Kontrak';
-                // } else {
-                //     $keterangan = 'Pemutusan Kontrak';
-                // }
 
                 $data = [
                     'pegawai_id' => $pegawai_id,
@@ -288,7 +278,6 @@ class Periode_m extends CI_Model
                     'staff_id' => $staff_id['staff_id'],
                     'periode_tahun' => date('Y', strtotime($tgl_periode['tgl_penilaian'])),
                     'nilai_akhir' => $nilai_akhir_pegawai,
-                    // 'keterangan' => $keterangan,
                 ];
 
                 $this->db->insert('tb_laporan_penilaian', $data);

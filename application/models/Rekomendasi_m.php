@@ -33,20 +33,33 @@ class Rekomendasi_m extends CI_Model
             $this->db->delete('tb_rekomendasi');
         }
 
+        // ambil data ke tabel laporan penilaian
         $this->db->from('tb_laporan_penilaian');
         $this->db->where('jabatan_id', $jabatan);
+        $this->db->where('periode_tahun', $tahun);
         $this->db->order_by('periode_tahun', 'desc');
         $this->db->order_by('nilai_akhir', 'desc');
         $rekomendasi = $this->db->get()->result_array();
 
-        //hitung passing grade
-        $subkriteria = $this->db->get('tb_subkriteria')->result_array();
+        //ambil data ke tabel nilai akhir
+        $passing_grade = $this->db->query("SELECT * FROM tb_nilai_akhir WHERE jabatan_id = {$jabatan} AND YEAR(tgl_periode) = {$tahun} GROUP BY jabatan_id,tgl_periode ORDER BY jabatan_id ASC ")->result_array();
 
-        $vektors_pg = 1;
-        foreach ($subkriteria as $key => $value) {
-            $vektors_pg *= ($value['passing_grade'] ** $value['bobot_subkriteria']);
+        $jumlah_pg = 0;
+        foreach ($passing_grade as $key => $value) {
+            $jumlah_pg += $value['passing_grade'];
         }
-        //var_dump($vektors_pg);die;
+        // echo $jumlah_pg;
+
+        // die;
+
+        //hitung passing grade
+        // $subkriteria = $this->db->get('tb_subkriteria')->result_array();
+
+        // $vektors_pg = 1;
+        // foreach ($subkriteria as $key => $value) {
+        //     $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
+        // }
+
 
         // $this->db->select('*,SUM(vektor_s) AS jumlah');
         // $this->db->from('tb_hasil_penilaian hp');
@@ -56,18 +69,14 @@ class Rekomendasi_m extends CI_Model
         // $this->db->group_by('hp.jabatan_id');
         // $jumlah_vektors = $this->db->get()->row_array();
 
-        $this->db->from('tb_hasil_penilaian hp');
-        $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
-        $this->db->where('jabatan_id', $jabatan);
-        $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
-        $jumlah_vektors = $this->db->get()->row_array();
+        // $this->db->from('tb_hasil_penilaian hp');
+        // $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
+        // $this->db->where('jabatan_id', $jabatan);
+        // $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
+        // $jumlah_vektors = $this->db->get()->row_array();
 
-        $vektorv_pg = 0;
-        foreach ($jumlah_vektors as $key => $value) {
-            
-        }
 
-        $passing_grade = $jumlah_vektors['jumlah'] / $vektors_pg;
+        // $passing_grade = $vektors_pg / $jumlah_vektors['jumlah'];
 
 
 
@@ -80,7 +89,7 @@ class Rekomendasi_m extends CI_Model
                 $keterangan = 'Pemutusan Kontrak';
             }
 
-            if ($value['nilai_akhir'] >= $passing_grade) {
+            if ($value['nilai_akhir'] >= $jumlah_pg) {
                 $rekomen = 'Direkomendasikan';
             } else {
                 $rekomen = 'Tidak Direkomendasikan';
