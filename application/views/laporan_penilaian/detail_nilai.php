@@ -42,7 +42,6 @@
                                         <th>#</th>
                                         <th>NIP</th>
                                         <th>Nama</th>
-                                        <th>Nilai Akhir</th>
                                         <th>Akhir Kontrak</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -60,7 +59,6 @@
                                             <td><?= $no++ ?></td>
                                             <td><?= $value['nip_pegawai'] ?></td>
                                             <td><?= $nama_pegawai ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
                                             <td><?= date('d F Y', strtotime($value['akhir_kontrak']))  ?></td>
                                             <td>
                                                 <a href="<?= base_url('Laporan_penilaian/tampil_nilai_periode/' . $periode_tahun . '/' . $pegawai_id . '/' . $jabatan . '/' . $nama_pegawai . '/' . $jabatan_id) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>

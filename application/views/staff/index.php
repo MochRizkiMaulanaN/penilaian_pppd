@@ -43,9 +43,9 @@
                                     <tr>
                                         <th>#</th>
                                         <th>NIP</th>
-                                        <th>Nama Penilai</th>
-                                        <th>Jabatan</th>
                                         <th>Nama Staff</th>
+                                        <th>Jabatan</th>
+                                        <th>Jabatan yang akan dinilai</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -95,7 +95,7 @@
             <div class="modal-body">
                 <form id="tambah_staff">
                     <div class="form-group">
-                        <label for="nama_penilai">Nama Penilai</label>
+                        <label for="nama_penilai">Nama Staff</label>
                         <input type="text" class="form-control" name="nama_penilai" id="nama_penilai">
                     </div>
                     <div class="form-group">
@@ -107,7 +107,7 @@
                         <input type="text" class="form-control" name="jabatan_staff" id="jabatan_staff">
                     </div>
                     <div class="form-group">
-                        <label for="nama_staff">Nama Staff</label>
+                        <label for="nama_staff">Jabatan yang akan dinilai</label>
                         <input type="text" class="form-control" name="nama_staff" id="nama_staff">
                     </div>
             </div>
@@ -137,7 +137,7 @@
                 <form id="ubah_staff">
                     <input type="hidden" id="id_staff_ubah">
                     <div class="form-group">
-                        <label for="nama_penilai_ubah">Nama Penilai</label>
+                        <label for="nama_penilai_ubah">Nama Staff</label>
                         <input type="text" class="form-control" name="nama_penilai_ubah" id="nama_penilai_ubah">
                     </div>
                     <div class="form-group">
@@ -149,7 +149,7 @@
                         <input type="text" class="form-control" name="jabatan_staff_ubah" id="jabatan_staff_ubah">
                     </div>
                     <div class="form-group">
-                        <label for="nama_staff_ubah">Nama Staff</label>
+                        <label for="nama_staff_ubah">Jabatan yang akan dinilai</label>
                         <input type="text" class="form-control" name="nama_staff_ubah" id="nama_staff_ubah">
                     </div>
             </div>
@@ -182,9 +182,13 @@
         $('#tambah_staff').validate({
             ignore: [],
             rules: {
-                nama_staff: 'required',
+                nama_staff: {
+                    required: true,
+                    lettersonly: true
+                },
                 nama_penilai: {
-                    required: true
+                    required: true,
+                    lettersonly: true
                 },
                 nip_staff: {
                     required: true,
@@ -194,15 +198,18 @@
 
                 jabatan_staff: {
                     required: true,
+                    lettersonly: true
                 }
 
             },
             messages: {
                 nama_staff: {
                     required: "Silahkan masukkan nama staff",
+                    lettersonly: "Silahkan masukkan huruf"
                 },
                 nama_penilai: {
                     required: "Silahkan masukkan nama penilai",
+                    lettersonly: "Silahkan masukkan huruf"
                 },
                 nip_staff: {
                     required: "Silahkan masukkan NIP",
@@ -211,6 +218,7 @@
                 },
                 jabatan_staff: {
                     required: "Silahkan masukkan nama jabatan",
+                    lettersonly: "Silahkan masukkan huruf"
                 }
 
             },
@@ -256,9 +264,13 @@
         $('#ubah_staff').validate({
             ignore: [],
             rules: {
-                nama_staff_ubah: 'required',
+                nama_staff_ubah: {
+                    required:true,
+                    lettersonly: true
+                },
                 nama_penilai_ubah: {
-                    required: true
+                    required: true,
+                    lettersonly: true
                 },
                 nip_staff_ubah: {
                     required: true,
@@ -267,15 +279,18 @@
                 },
                 jabatan_staff_ubah: {
                     required: true,
+                    lettersonly: true
                 }
 
             },
             messages: {
                 nama_staff_ubah: {
                     required: "Silahkan masukkan nama staff",
+                    lettersonly: "Silahkan masukkan huruf"
                 },
                 nama_penilai_ubah: {
                     required: "Silahkan masukkan nama penilai",
+                    lettersonly: "Silahkan masukkan huruf"
                 },
                 nip_staff_ubah: {
                     required: "Silahkan masukkan NIP",
@@ -284,7 +299,8 @@
                 },
                 jabatan_staff_ubah: {
                     required: "Silahkan masukkan nama jabatan",
-                
+                    lettersonly: "Silahkan masukkan huruf"
+
                 }
 
             },

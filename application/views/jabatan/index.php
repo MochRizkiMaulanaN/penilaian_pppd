@@ -152,12 +152,16 @@
         $('#tambah_jabatan').validate({
             ignore: [],
             rules: {
-                nama_jabatan: 'required'
+                nama_jabatan: {
+                    required: true,
+                    lettersonly: true
+                },
 
             },
             messages: {
                 nama_jabatan: {
                     required: "Silahkan masukkan nama jabatan",
+                    lettersonly: "Silahkan masukkan huruf",
                 }
 
             },
@@ -197,13 +201,18 @@
         $('#ubah_jabatan').validate({
             ignore: [],
             rules: {
-                nama_jabatan_ubah: 'required'
+                nama_jabatan_ubah: {
+                    required: true,
+                    lettersonly: true
+                },
 
             },
             messages: {
                 nama_jabatan_ubah: {
                     required: "Silahkan masukkan nama jabatan",
+                    lettersonly: "Silahkan masukkan huruf",
                 }
+
 
             },
             errorElement: 'span',

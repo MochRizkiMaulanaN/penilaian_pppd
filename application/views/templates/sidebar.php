@@ -34,7 +34,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-solid fa-folder-open"></i>
                             <p>
-                                Data Master
+                                Kelola Data Master
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -81,7 +81,7 @@
                             <a href="<?= base_url('Kriteria') ?>" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-layer-group"></i>
                                 <p>
-                                    Data Kriteria
+                                    Kelola Data Kriteria
                                 </p>
                             </a>
                         </li>
@@ -90,7 +90,7 @@
                             <a href="<?= base_url('Periode_penilaian') ?>" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-folder-open"></i>
                                 <p>
-                                    Periode Penilaian
+                                    Kelola Periode Penilaian
                                 </p>
                             </a>
                         </li>
@@ -99,7 +99,7 @@
                             <a href="<?= base_url('Penilaian') ?>" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-star"></i>
                                 <p>
-                                    Penilaian
+                                    Penilaian KInerja
                                 </p>
                             </a>
                         </li>
@@ -117,7 +117,7 @@
                             <a href="<?= base_url('Rekomendasi') ?>" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-clipboard"></i>
                                 <p>
-                                    Rekomendasi
+                                    Rekomendasi Pegawai
                                 </p>
                             </a>
                         </li>

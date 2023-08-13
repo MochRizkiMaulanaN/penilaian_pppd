@@ -15,12 +15,9 @@ class Rekomendasi_m extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    public function tambah()
+    public function tambah($tahun, $jabatan, $kuota)
     {
-        $tahun = $this->input->post('tahun');
-        $jabatan = $this->input->post('jabatan');
-        $kuota = $this->input->post('kuota');
-
+        
         $this->db->from('tb_rekomendasi');
         $this->db->where('jabatan_id', $jabatan);
         $this->db->where('periode_tahun', $tahun);
@@ -48,39 +45,7 @@ class Rekomendasi_m extends CI_Model
         foreach ($passing_grade as $key => $value) {
             $jumlah_pg += $value['passing_grade'];
         }
-        // echo $jumlah_pg;
 
-        // die;
-
-        //hitung passing grade
-        // $subkriteria = $this->db->get('tb_subkriteria')->result_array();
-
-        // $vektors_pg = 1;
-        // foreach ($subkriteria as $key => $value) {
-        //     $vektors_pg *= (($value['passing_grade'] + 9) ** $value['bobot_subkriteria']);
-        // }
-
-
-        // $this->db->select('*,SUM(vektor_s) AS jumlah');
-        // $this->db->from('tb_hasil_penilaian hp');
-        // $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
-        // $this->db->where('jabatan_id', $jabatan);
-        // $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
-        // $this->db->group_by('hp.jabatan_id');
-        // $jumlah_vektors = $this->db->get()->row_array();
-
-        // $this->db->from('tb_hasil_penilaian hp');
-        // $this->db->join('tb_periode_penilaian pp', 'hp.periode_id = pp.id_periode');
-        // $this->db->where('jabatan_id', $jabatan);
-        // $this->db->where('YEAR(pp.tgl_penilaian)', $tahun);
-        // $jumlah_vektors = $this->db->get()->row_array();
-
-
-        // $passing_grade = $vektors_pg / $jumlah_vektors['jumlah'];
-
-
-
-        //var_dump($passing_grade);die;
         $i = 1;
         foreach ($rekomendasi as $key => $value) {
             if ($i <= $kuota) {

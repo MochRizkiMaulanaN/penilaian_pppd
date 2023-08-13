@@ -45,12 +45,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($periode_nilai as $key => $value) : ?>
+                                    <?php
+                                    $total = 0;
+                                    foreach ($periode_nilai as $key => $value) :
+                                        $nilai_akhir = $value['nilai_akhir'];
+                                    ?>
                                         <tr>
                                             <td><?= date('d F Y', strtotime($value['tgl_periode'])) ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
+                                            <td><?= $nilai_akhir ?></td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php
+                                        $total += $nilai_akhir;
+                                    endforeach; ?>
+                                    <tr>
+                                        <th>Total Nilai Akhir</th>
+                                        <th><?= $total ?></th>
+                                    </tr>
                                 </tbody>
                             </table>
 

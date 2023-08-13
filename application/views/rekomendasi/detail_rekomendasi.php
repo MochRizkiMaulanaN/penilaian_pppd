@@ -35,7 +35,13 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <?php if ($this->session->flashdata('pesan')) {
+                                echo $this->session->flashdata('pesan');
+                            } ?>
                             <form action="<?= base_url('Rekomendasi/keputusan') ?>" method="post" onsubmit="konfirmasi()">
+                                <input type="hidden" name="jabatan_id" value="<?= $jabatan_id ?>">
+                                <input type="hidden" name="periode_tahun" value="<?= $periode_tahun ?>">
+
                                 <!--<strong>Jabatan : <?= rawurldecode($nama_jabatan); ?></strong> -->
                                 <table id="example1" class="table table-bordered table-hover">
                                     <thead>
@@ -76,10 +82,10 @@
                                             </td> -->
                                                 <input type="hidden" name="id_pegawai[]" value="<?= $id_pegawai ?>">
                                                 <td>
-                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="0" style="width: 100%; height: 2em; border: 0px;">
+                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="0" style="width: 100px; height: 20px; border: 0px;">
                                                 </td>
                                                 <td>
-                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="1" style="width: 100%; height: 2em; border: 0px;">
+                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="1" style="width: 100px; height: 20px; border: 0px;">
                                                 </td>
                                             </tr>
                                         <?php }

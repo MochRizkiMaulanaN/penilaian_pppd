@@ -223,7 +223,7 @@
             rules: {
                 nama_pengguna: {
                     required: true,
-                    alpha: true
+                    lettersonly: true
                 },
                 nip_pengguna: {
                     required: true,
@@ -250,6 +250,7 @@
             messages: {
                 nama_pengguna: {
                     required: "Silahkan masukkan nama pengguna",
+                    lettersonly: "Silahkan masukan huruf",
                 },
                 nip_pengguna: {
                     required: "Silahkan masukkan NIP",
@@ -318,7 +319,10 @@
         $('#ubah_pengguna').validate({
             ignore: [],
             rules: {
-                nama_pengguna_ubah: 'required',
+                nama_pengguna_ubah: {
+                    required: true,
+                    lettersonly: true
+                },
                 email_pengguna_ubah: {
                     required: true,
                     email: true
@@ -337,6 +341,7 @@
             messages: {
                 nama_pengguna_ubah: {
                     required: "Silahkan masukkan nama pengguna",
+                    lettersonly: "Silahkan masukkan huruf",
                 },
                 nip_pengguna_ubah: {
                     required: "Silahkan masukkan NIP",

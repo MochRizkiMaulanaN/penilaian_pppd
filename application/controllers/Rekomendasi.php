@@ -52,20 +52,88 @@ class Rekomendasi extends CI_Controller
             $this->load->view('rekomendasi/tambah', $data);
             $this->load->view('templates/footer');
         } else {
-            $this->Rekomendasi_m->tambah();
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+            $tahun = $this->input->post('tahun');
+            $jabatan = $this->input->post('jabatan');
+            $kuota = $this->input->post('kuota');
+
+            //jumlah pegawai rekemndasi
+            $query = $this->db->query("SELECT * FROM tb_laporan_penilaian WHERE jabatan_id = $jabatan AND periode_tahun = $tahun");
+            $jumlah = $query->num_rows();
+
+            //ambil nama jabatan
+            $query_jabatan = $this->db->get_where('tb_jabatan', ['id_jabatan' => $jabatan])->row_array();
+            $nama_jabatan = $query_jabatan['nama_jabatan'];
+
+
+            if ($kuota > $jumlah) {
+                // echo $nama_jabatan;
+                // die;
+                $url = base_url('Rekomendasi/tambah');
+                echo "
+                <script>
+                alert('Maaf, kuota pegawai " . $nama_jabatan . " maksimal sebanyak " . $jumlah . " orang');
+                window.location.href='" . $url . "';
+                </script>
+                ";
+            } else {
+                $this->Rekomendasi_m->tambah($tahun, $jabatan, $kuota);
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
             Rekomendasi pegawai berhasil ditambahkan
            </div>');
-            redirect('Rekomendasi');
+                redirect('Rekomendasi');
+            }
         }
     }
 
     public function keputusan()
     {
+        $jabatan_id = $_POST['jabatan_id'];
+        $periode_tahun = $_POST['periode_tahun'];
         foreach ($_POST['id_pegawai'] as $key => $id_pegawai) {
-            echo $id_pegawai . ' : ' . $_POST['keputusan' . $id_pegawai].'<br>';
+            $keputusan = (!empty($_POST['keputusan' . $id_pegawai])) ? $_POST['keputusan' . $id_pegawai] : null;
+            // if (empty($keputusan)) {
+            //     echo "gagal";
+            //     var_dump($keputusan);
+            //     die;
+            // $url = base_url('Rekomendasi/detail/' . $jabatan_id . '/' . $periode_tahun);
+            // echo "
+            //     <script>
+            //     alert('Pilih keputusan untuk semua pegawai');
+            //     window.location.href='" . $url . "';
+            //     </script>
+            //     ";
+            //     exit;
+            //     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
+            //     Pilih keputusan untuk semua pegawai
+            //    </div>');
+
+            //    redirect('Rekomendasi/detail/' . $jabatan_id . '/' . $periode_tahun);
+            //} else {
+            if ($keputusan === '1') {
+                $akhir_kontrak = $this->db->get('tb_pegawai', ['nip_pegawai' => $id_pegawai])->row_array();
+
+                $AkhirKontrak_berikutnya = date('Y-m-d', strtotime('+1 year', strtotime($akhir_kontrak['akhir_kontrak'])));
+
+                //update masa kontrak
+                $this->db->update('tb_pegawai', ['akhir_kontrak' => $AkhirKontrak_berikutnya], ['id_pegawai' => $id_pegawai]);
+
+
+                //hapus pegawai di tabel rekomendasi
+                $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
+            } else {
+                //update status pegawai menjadi non aktif
+                $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['id_pegawai' => $id_pegawai]);
+
+                //hapus pegawai di tabel rekomendasi
+                $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
+            }
+            // }
         }
-        die;
+
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+            Keputusan pegawai berhasil ditambahkan
+           </div>');
+        redirect('Rekomendasi');
     }
 
     public function detail($jabatan_id, $periode_tahun)
@@ -76,51 +144,15 @@ class Rekomendasi extends CI_Controller
         $this->db->where('r.jabatan_id', $jabatan_id);
         $data['rekomendasi'] = $this->db->get()->result_array();
 
+        $data['jabatan_id'] = $jabatan_id;
+        $data['periode_tahun'] = $periode_tahun;
+
         $data['title'] = 'Halaman Detail Rekomendasi';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/navbar');
         $this->load->view('templates/sidebar');
         $this->load->view('rekomendasi/detail_rekomendasi', $data);
         $this->load->view('templates/footer');
-    }
-
-    public function perpanjangan()
-    {
-        if ($this->input->is_ajax_request()) {
-            $nip = $this->input->post('nip');
-            $pegawai_id = $this->input->post('id');
-
-            $akhir_kontrak = $this->db->get('tb_pegawai', ['nip_pegawai' => $nip])->row_array();
-
-            $AkhirKontrak_berikutnya = date('Y-m-d', strtotime('+1 year', strtotime($akhir_kontrak['akhir_kontrak'])));
-
-            //update masa kontrak
-            $this->db->update('tb_pegawai', ['akhir_kontrak' => $AkhirKontrak_berikutnya], ['nip_pegawai' => $nip]);
-
-
-            //hapus pegawai di tabel rekomendasi
-            $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
-
-            $data['status'] = 1;
-            echo json_encode($data);
-        }
-    }
-
-    public function pemutusan()
-    {
-        if ($this->input->is_ajax_request()) {
-            $nip = $this->input->post('nip');
-            $pegawai_id = $this->input->post('id');
-
-            //update status pegawai menjadi non aktif
-            $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['nip_pegawai' => $nip]);
-
-            //hapus pegawai di tabel rekomendasi
-            $this->db->delete('tb_rekomendasi', ['pegawai_id' => $pegawai_id]);
-
-            $data['status'] = 1;
-            echo json_encode($data);
-        }
     }
 
     public function hapus()

@@ -45,7 +45,7 @@
                                         <th>Nama Pegawai</th>
                                         <th>NIP</th>
                                         <th>Jabatan</th>
-                                        <th>Staff</th>
+                                        <th>Staff Penilai</th>
                                         <th>Masa Akhir Kontrak</th>
                                         <th>Status Pegawai</th>
                                         <th>Aksi</th>
@@ -135,7 +135,7 @@
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label for="nama_staff">Staff</label>
+                            <label for="nama_staff">Staff Penilai</label>
                             <select class="select2 form-control" name="nama_staff" id="nama_staff">
                                 <option value="">Pilih salah satu</option>
                                 <?php
@@ -214,7 +214,7 @@
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label for="nama_staff_ubah">Staff</label>
+                            <label for="nama_staff_ubah">Staff Penilai</label>
                             <select class="select2 form-control" name="nama_staff_ubah" id="nama_staff_ubah">
 
                             </select>
@@ -275,7 +275,10 @@
         $('#tambah_pegawai').validate({
             ignore: [],
             rules: {
-                nama_pegawai: 'required',
+                nama_pegawai: {
+                    required:true,
+                    lettersonly: true
+                },
                 email_pegawai: {
                     required: true,
                     email: true
@@ -305,6 +308,7 @@
             messages: {
                 nama_pegawai: {
                     required: "Silahkan masukkan nama pegawai",
+                    lettersonly: "Silahkan masukkan huruf"
                 },
                 nip_pegawai: {
                     required: "Silahkan masukkan nip pegawai",

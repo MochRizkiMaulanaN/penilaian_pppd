@@ -77,6 +77,7 @@
                                     <!-- /.card-body -->
                                     <div class="card-footer">
                                         <button type="submit" class="btn btn-primary">Tambah</button>
+                                        <a href="<?= base_url('Rekomendasi') ?>" class="btn btn-warning text-white">Kembali</a>
                                     </div>
                                     <!-- /.card-footer -->
                                 </form>
