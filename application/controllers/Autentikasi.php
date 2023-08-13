@@ -84,9 +84,9 @@ class Autentikasi extends CI_Controller
 	{
 		$config = [
 			'protocol' => 'smtp',
-			'smtp_host' => 'ssl://mail.tjoutsource.com',
-			'smtp_user' => 'trengginasjaya@tjoutsource.com',
-			'smtp_pass' => 'trengginasjaya',
+			'smtp_host' => 'ssl://mail.penilaiankinerjap3dwkbb.com',
+			'smtp_user' => 'pppd@penilaiankinerjap3dwkbb.com',
+			'smtp_pass' => 'pppd_130823',
 			'smtp_port' => 465,
 			'mailtype' => 'html',
 			'charset' => 'utf-8',
@@ -95,7 +95,7 @@ class Autentikasi extends CI_Controller
 
 		$this->load->library('email', $config);
 
-		$this->email->from('trengginasjaya@tjoutsource.com', 'PT Trengginas Jaya');
+		$this->email->from('pppd@penilaiankinerjap3dwkbb.com', 'PPPD');
 		$this->email->to($email);
 
 		if ($type == 'lupakatasandi') {
@@ -155,6 +155,40 @@ class Autentikasi extends CI_Controller
 		} else {
 			$this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">
                Reset katasandi gagal! Email salah.
+              </div>');
+			redirect('Autentikasi');
+		}
+	}
+
+	public function ubah_katasandi()
+	{
+		if (!$this->session->userdata('reset_email')) {
+            redirect('Autentikasi');
+        }
+
+		$this->form_validation->set_rules('password1', 'Password', 'required|trim|matches[password2]', [
+			'required' => 'Katasandi tidak boleh kosong',
+			'matches' => 'Katasandi harus sama'
+		]);
+		$this->form_validation->set_rules('password2', 'Ulangi Password', 'required|trim|matches[password1]', [
+			'required' => 'Katasandi tidak boleh kosong',
+			'matches' => 'Katasandi harus sama'
+		]);
+
+		if ($this->form_validation->run() == false) {
+			$data['title'] = 'Ubah Katasandi';
+			$this->load->view('templates/header_login', $data);
+			$this->load->view('Autentikasi/ubah_katasandi');
+			$this->load->view('templates/footer_login');
+		} else {
+			$email = $this->session->userdata('reset_email');
+			$katasandi = $this->input->post('password1');
+
+			$this->db->update('tb_pengguna', ['password' => $katasandi], ['email' => $email]);
+
+			$this->session->unset_userdata('reset_email');
+			$this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
+               Katasandi berhasil diubah! Silahkan Login.
               </div>');
 			redirect('Autentikasi');
 		}

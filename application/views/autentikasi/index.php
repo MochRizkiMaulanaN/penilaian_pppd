@@ -38,7 +38,7 @@
             </form>
 
             <p>
-                <a href="forgot-password.html">Lupa password ?</a>
+                <a href="<?= base_url('Autentikasi/lupa_katasandi') ?>">Lupa password ?</a>
             </p>
             <hr>
             <!-- <p class="mb-0 text-center">

@@ -90,7 +90,12 @@ class Rekomendasi extends CI_Controller
         $jabatan_id = $_POST['jabatan_id'];
         $periode_tahun = $_POST['periode_tahun'];
         foreach ($_POST['id_pegawai'] as $key => $id_pegawai) {
-            $keputusan = (!empty($_POST['keputusan' . $id_pegawai])) ? $_POST['keputusan' . $id_pegawai] : null;
+            // $keputusan = (!empty($_POST['keputusan' . $id_pegawai])) ? $_POST['keputusan' . $id_pegawai] : null;
+
+            $keputusan = $_POST['keputusan' . $id_pegawai];
+
+            // var_dump($id_pegawai, $keputusan);
+            // echo '<br>';
             // if (empty($keputusan)) {
             //     echo "gagal";
             //     var_dump($keputusan);
@@ -109,10 +114,11 @@ class Rekomendasi extends CI_Controller
 
             //    redirect('Rekomendasi/detail/' . $jabatan_id . '/' . $periode_tahun);
             //} else {
-            if ($keputusan === '1') {
-                $akhir_kontrak = $this->db->get('tb_pegawai', ['nip_pegawai' => $id_pegawai])->row_array();
+            if ($keputusan == '1') {
+                $akhir_kontrak = $this->db->get_where('tb_pegawai', ['id_pegawai' => $id_pegawai])->row_array();
 
                 $AkhirKontrak_berikutnya = date('Y-m-d', strtotime('+1 year', strtotime($akhir_kontrak['akhir_kontrak'])));
+
 
                 //update masa kontrak
                 $this->db->update('tb_pegawai', ['akhir_kontrak' => $AkhirKontrak_berikutnya], ['id_pegawai' => $id_pegawai]);
@@ -127,8 +133,10 @@ class Rekomendasi extends CI_Controller
                 //hapus pegawai di tabel rekomendasi
                 $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
             }
+
             // }
         }
+        
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
             Keputusan pegawai berhasil ditambahkan

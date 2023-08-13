@@ -38,7 +38,7 @@
                             <?php if ($this->session->flashdata('pesan')) {
                                 echo $this->session->flashdata('pesan');
                             } ?>
-                            <form action="<?= base_url('Rekomendasi/keputusan') ?>" method="post" onsubmit="konfirmasi()">
+                            <form action="<?= base_url('Rekomendasi/keputusan') ?>" method="post" onsubmit="return konfirmasi()">
                                 <input type="hidden" name="jabatan_id" value="<?= $jabatan_id ?>">
                                 <input type="hidden" name="periode_tahun" value="<?= $periode_tahun ?>">
 
