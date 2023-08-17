@@ -90,9 +90,9 @@ class Rekomendasi extends CI_Controller
         $jabatan_id = $_POST['jabatan_id'];
         $periode_tahun = $_POST['periode_tahun'];
         foreach ($_POST['id_pegawai'] as $key => $id_pegawai) {
-            // $keputusan = (!empty($_POST['keputusan' . $id_pegawai])) ? $_POST['keputusan' . $id_pegawai] : null;
+            $keputusan = (!empty($_POST['keputusan' . $id_pegawai])) ? $_POST['keputusan' . $id_pegawai] : null;
 
-            $keputusan = $_POST['keputusan' . $id_pegawai];
+            // $keputusan = $_POST['keputusan' . $id_pegawai];
 
             // var_dump($id_pegawai, $keputusan);
             // echo '<br>';
@@ -128,10 +128,11 @@ class Rekomendasi extends CI_Controller
                 $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
 
                 //hapus pegawai di tabel laporan
-                $this->db->where('pegawai_id',$id_pegawai);
-                $this->db->where('periode_tahun',$periode_tahun);
+                $this->db->where('pegawai_id', $id_pegawai);
+                $this->db->where('periode_tahun', $periode_tahun);
                 $this->db->delete('tb_laporan_penilaian');
             } else {
+
                 //update status pegawai menjadi non aktif
                 $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['id_pegawai' => $id_pegawai]);
 
@@ -139,14 +140,14 @@ class Rekomendasi extends CI_Controller
                 $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
 
                 //hapus pegawai di tabel laporan
-                $this->db->where('pegawai_id',$id_pegawai);
-                $this->db->where('periode_tahun',$periode_tahun);
+                $this->db->where('pegawai_id', $id_pegawai);
+                $this->db->where('periode_tahun', $periode_tahun);
                 $this->db->delete('tb_laporan_penilaian');
             }
 
             // }
         }
-        
+
 
         $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">
             Keputusan pegawai berhasil ditambahkan
