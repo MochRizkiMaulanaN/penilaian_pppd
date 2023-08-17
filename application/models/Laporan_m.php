@@ -6,11 +6,11 @@ class Laporan_m extends CI_Model
     public function tampil_laporan()
     {
         $this->db->select('*');
-        $this->db->from('tb_laporan_penilaian lp');
-        $this->db->join('tb_jabatan j', 'lp.jabatan_id = j.id_jabatan');
-        $this->db->order_by('periode_tahun', 'desc');
-        $this->db->group_by('periode_tahun');
-        $this->db->group_by('lp.jabatan_id');
+        $this->db->from('tb_nilai_akhir na');
+        $this->db->join('tb_jabatan j', 'na.jabatan_id = j.id_jabatan');
+        $this->db->order_by('tgl_periode', 'desc');
+        $this->db->group_by('YEAR(tgl_periode)');
+        $this->db->group_by('na.jabatan_id');
         return $this->db->get()->result_array();
     }
 
@@ -65,10 +65,10 @@ class Laporan_m extends CI_Model
     public function detail_nilai($periode_tahun, $jabatan)
     {
         $this->db->select('*');
-        $this->db->from('tb_laporan_penilaian lp');
-        $this->db->join('tb_pegawai p', 'lp.pegawai_id = p.id_pegawai');
-        $this->db->where('periode_tahun', $periode_tahun);
-        $this->db->where('lp.jabatan_id', $jabatan);
+        $this->db->from('tb_nilai_akhir na');
+        $this->db->join('tb_pegawai p', 'na.pegawai_id = p.id_pegawai');
+        $this->db->where('Year(tgl_periode)', $periode_tahun);
+        $this->db->where('na.jabatan_id', $jabatan);
         return $this->db->get()->result_array();
     }
 

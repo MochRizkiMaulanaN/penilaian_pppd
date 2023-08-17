@@ -52,7 +52,7 @@
                                     foreach ($detail_nilai as $key => $value) {
                                         $pegawai_id = $value['pegawai_id'];
                                         $jabatan_id = $value['jabatan_id'];
-                                        $periode_tahun = $value['periode_tahun'];
+                                        $periode_tahun = date('Y',strtotime($value['tgl_periode'])) ;
                                         $nama_pegawai = $value['nama_pegawai'];
                                     ?>
                                         <tr>

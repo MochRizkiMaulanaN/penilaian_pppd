@@ -57,7 +57,7 @@
                                     foreach ($laporan as $key => $value) {
                                         $nama_jabatan = $value['nama_jabatan'];
                                         $jabatan_id = $value['jabatan_id'];
-                                        $periode_tahun = $value['periode_tahun'];
+                                        $periode_tahun = date('Y', strtotime($value['tgl_periode']));
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
