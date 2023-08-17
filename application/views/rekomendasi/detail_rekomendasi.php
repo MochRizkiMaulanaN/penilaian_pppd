@@ -54,8 +54,6 @@
                                             <th>Rekomendasi</th>
                                             <th>Keterangan</th>
                                             <th>Akhir Kontrak</th>
-                                            <!-- <th>Aksi</th> -->
-                                            <th>Pemutusan</th>
                                             <th>Perpanjangan</th>
                                         </tr>
                                     </thead>
@@ -82,10 +80,7 @@
                                             </td> -->
                                                 <input type="hidden" name="id_pegawai[]" value="<?= $id_pegawai ?>">
                                                 <td>
-                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="0" style="width: 100px; height: 20px; border: 0px;">
-                                                </td>
-                                                <td>
-                                                    <input type="radio" name="keputusan<?= $id_pegawai ?>" value="1" style="width: 100px; height: 20px; border: 0px;">
+                                                <input type="checkbox" name="keputusan<?= $id_pegawai ?>" value="1" style="width: 100px; height: 20px; border: 0px;">
                                                 </td>
                                             </tr>
                                         <?php }
