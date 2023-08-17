@@ -126,12 +126,22 @@ class Rekomendasi extends CI_Controller
 
                 //hapus pegawai di tabel rekomendasi
                 $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
+
+                //hapus pegawai di tabel laporan
+                $this->db->where('pegawai_id',$id_pegawai);
+                $this->db->where('periode_tahun',$periode_tahun);
+                $this->db->delete('tb_laporan_penilaian');
             } else {
                 //update status pegawai menjadi non aktif
                 $this->db->update('tb_pegawai', ['status_pegawai' => 0], ['id_pegawai' => $id_pegawai]);
 
                 //hapus pegawai di tabel rekomendasi
                 $this->db->delete('tb_rekomendasi', ['pegawai_id' => $id_pegawai]);
+
+                //hapus pegawai di tabel laporan
+                $this->db->where('pegawai_id',$id_pegawai);
+                $this->db->where('periode_tahun',$periode_tahun);
+                $this->db->delete('tb_laporan_penilaian');
             }
 
             // }
