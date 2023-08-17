@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Hasil Penilaian</h1>
+                    <h1 class="m-0">Periode Penilaian</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Hasil Penilaian</li>
+                        <li class="breadcrumb-item active">Periode Penilaian</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -31,39 +31,39 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
+                            <a href="<?= base_url('Laporan_penilaian/detail_penilaian_staff/' . $staff_id . '/' . $tahun . '/' . $jabatan_id . '/' . $jabatan) ?>" class="btn btn-warning text-white">Kembali</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="example1" class="table table-bordered table-hover">
+                            <strong>Nama Pegawai : <?= rawurldecode($nama_pegawai); ?></strong><br>
+                            <strong>Jabatan : <?= rawurldecode($jabatan); ?></strong>
+                            <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Tahun</th>
-                                        <th>Jabatan</th>
-                                        <th>Aksi</th>
+                                        <th>Tanggal Periode</th>
+                                        <th>Nilai</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $no = 1;
-                                    foreach ($laporan as $key => $value) {
-                                        $nama_jabatan = $value['nama_jabatan'];
-                                        $staff_id = $value['staff_id'];
-                                        $jabatan_id = $value['jabatan_id'];
-                                        $periode_tahun = date('Y', strtotime($value['tgl_periode']));
+                                    $total = 0;
+                                    foreach ($periode_nilai as $key => $value) :
+                                        $nilai_akhir = $value['nilai_akhir'];
                                     ?>
                                         <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= $periode_tahun ?></td>
-                                            <td><?= $nama_jabatan ?></td>
-                                            <td>
-                                                <a href="<?= base_url('Laporan_penilaian/detail_penilaian_staff/' . $staff_id . '/' . $periode_tahun . '/' . $jabatan_id . '/' . $nama_jabatan) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
-                                            </td>
+                                            <td><?= date('d F Y', strtotime($value['tgl_periode'])) ?></td>
+                                            <td><?= $nilai_akhir ?></td>
                                         </tr>
-                                    <?php }
-                                    ?>
+                                    <?php
+                                        $total += $nilai_akhir;
+                                    endforeach; ?>
+                                    <tr>
+                                        <th>Total Nilai Akhir</th>
+                                        <th><?= $total ?></th>
+                                    </tr>
                                 </tbody>
                             </table>
+
                         </div>
                         <!-- /.card-body -->
                     </div>

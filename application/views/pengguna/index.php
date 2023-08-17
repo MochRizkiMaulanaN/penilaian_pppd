@@ -104,8 +104,8 @@
                 <form id="tambah_pengguna">
                     <div class="form-group">
                         <label for="role_pengguna">Role</label>
-                        <select class="select2 form-control" name="role_pengguna" id="role_pengguna">
-                            <option value="">Pilih salah satu</option>
+                        <select class="role_select2 form-control" name="role_pengguna" id="role_pengguna">
+                            <option value=""></option>
                             <?php
                             foreach ($role as $key => $value) { ?>
                                 <option value="<?= $value['id_role'] ?>"><?= $value['nama_role'] ?></option>
@@ -114,12 +114,13 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="nama_pengguna">Nama</label>
-                        <input type="text" class="form-control nama_pengguna_input" name="nama_pengguna" id="nama_pengguna">
-                    </div>
-                    <div class="form-group">
                         <label for="nip_pengguna">NIP</label>
                         <input type="text" class="form-control" name="nip_pengguna" id="nip_pengguna">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nama_pengguna">Nama</label>
+                        <input type="text" class="form-control nama_pengguna_input" name="nama_pengguna" id="nama_pengguna">
                     </div>
 
                     <div class="form-group">
@@ -165,11 +166,11 @@
                 <div class="modal-body">
                     <input type="hidden" id="id_pengguna_ubah">
                     <div class="form-group">
-                        <label for="nama_pengguna">Nama</label>
+                        <label for="nama_pengguna_ubah">Nama</label>
                         <input type="text" name="nama_pengguna_ubah" class="form-control" id="nama_pengguna_ubah">
                     </div>
                     <div class="form-group">
-                        <label for="nip_pengguna">NIP</label>
+                        <label for="nip_pengguna_ubah">NIP</label>
                         <input type="text" name="nip_pengguna_ubah" class="form-control" id="nip_pengguna_ubah">
                     </div>
                     <div class="form-group">
@@ -208,7 +209,20 @@
     $(function() {
 
         //Initialize Select2 Elements
-        $('.select2').select2()
+        $('.role_select2').select2({
+            placeholder: "Pilih Salah Satu",
+            allowClear: true
+        })
+        $('.nip_staff_select2').select2({
+            placeholder: "Pilih Salah Satu",
+            allowClear: true,
+            dropdownParent: $('#modal_tambah_pengguna')
+        })
+        $('.nip_pegawai_select2').select2({
+            placeholder: "Pilih Salah Satu",
+            allowClear: true,
+            dropdownParent: $('#modal_tambah_pengguna')
+        })
 
         $("#example1").DataTable({
             "responsive": true,
@@ -421,46 +435,61 @@
 
         })
 
-        $('#role_pengguna_1').change(function() {
-            id_role = $(this).val()
-            $.ajax({
-                method: 'POST',
-                url: '<?= base_url('Pengguna/tampil_staff_id')  ?>',
-                data: {
-                    id_role: id_role,
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if (data.id_role == 1) {
-                        $('#nama_pengguna_input').css("display","block")
-                        $('#nama_pengguna_select').css("display","none")
-                    } else if (data.id_role == 2) {
-                        $('#nama_pengguna_input').css("display","block")
-                        $('#nama_pengguna_select').css("display","none")
-                    } else if (data.id_role == 3) {
-                        $('#nama_pengguna_input').css("display","none")
-                        // $('#nip_pengguna').val(data.nip_staff)
+        // $('#role_pengguna_1').change(function() {
+        //     id_role = $(this).val()
 
-                        staff = data.staff
-                        baris = '<label for="nama_pengguna">Nama</label><select class="select2 form-control nama_pengguna_select" name="nama_pengguna" id="nama_pengguna"> <option value="" disabled>Pilih salah satu</option>'
-                        for (let i = 0; i < staff.length; i++) {
-                            const value = staff[i];
-                            baris += '<option value="' + value['nama_penilai'] + '">' + value['nama_penilai'] + '</option>'
-                        }
-                        baris += '</select>'
-                        $('.nama_group').html(baris)
+        //     if (id_role == 3 || id_role == 4) {
+        //         $('#nip_pengguna').hide()
+        //         $.ajax({
+        //             method: 'POST',
+        //             url: '<?= base_url('Pengguna/tampil_staff_id')  ?>',
+        //             data: {
+        //                 id_role: id_role,
+        //             },
+        //             dataType: 'json',
+        //             success: function(data) {
 
 
-                    } else if (data.id_role == 4) {
-                        $('#nama_pengguna').hide()
-                        pegawai = data.pegawai
+        //                 if (data.id_role == 3) {
+        //                     // staff = data.staff
+        //                     // console.log(staff.length)
+        //                     $('#nip_pengguna_pegawai').remove()
+        //                     staff = data.staff
+        //                     baris = '<select class="nip_staff_select2 form-control " name="nip_pengguna" id="nip_pengguna_staff"> <option value="" disabled>Pilih salah satu</option>'
+        //                     for (let i = 0; i < staff.length; i++) {
+        //                         const data = staff[i];
+        //                         baris += '<option value="' + data.nip_staff + '">' + data.nip_staff + '</option>'
+        //                     }
+        //                     baris += '</select>'
+        //                     $('#nip_pengguna_label').after(baris)
+        //                 } else {
+        //                     $('#nip_pengguna_staff').remove()
+        //                     pegawai = data.pegawai
+        //                     baris = '<select class="nip_pegawai_select2 form-control " name="nip_pengguna" id="nip_pengguna_pegawai"> <option value="" disabled>Pilih salah satu</option>'
+        //                     for (let i = 0; i < pegawai.length; i++) {
+        //                         const data = pegawai[i];
+        //                         baris += '<option value="' + data.nip_pegawai + '">' + data.nip_pegawai + '</option>'
+        //                     }
+        //                     baris += '</select>'
+        //                     $('#nip_pengguna_label').after(baris)
+        //                 }
 
-                    }
-                }
+        //             }
 
-            })
+        //         })
+        //     } else {
+        //         $('#nip_pengguna').show()
+        //         $('#nip_pengguna_staff').remove()
+        //         $('#nip_pengguna_pegawai').remove()
+        //     }
 
-        })
+
+        // })
+
+        // $('#nip_pengguna_staff_1').change(function() {
+        //     nip = $(this).val()
+        //     console.log(nip)
+        // })
 
     });
 

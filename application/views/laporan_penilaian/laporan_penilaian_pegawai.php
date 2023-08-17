@@ -46,7 +46,7 @@
                                     <?php
                                     $no = 1;
                                     foreach ($laporan as $key => $value) {
-                                        $periode_tahun = $value['periode_tahun'];
+                                        $periode_tahun = date('Y', strtotime($value['tgl_periode']));
                                         $pegawai_id = $value['pegawai_id'];
                                     ?>
                                         <tr>

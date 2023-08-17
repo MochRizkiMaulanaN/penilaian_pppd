@@ -140,14 +140,15 @@ class Pengguna extends CI_Controller
                     'staff' => $this->db->get('tb_staff')->result_array(),
                     'id_role' => $id_role
                 ];
-            } elseif ($id_role == 4) {
+            } else {
                 $data = [
                     'pegawai' => $this->db->get('tb_pegawai')->result_array(),
                     'id_role' => $id_role
                 ];
-            } else {
-                $data['id_role'] = $id_role;
             }
+            //else {
+            //     $data['id_role'] = $id_role;
+            // }
 
 
             echo json_encode($data);

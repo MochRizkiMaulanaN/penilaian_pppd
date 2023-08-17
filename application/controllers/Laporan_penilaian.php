@@ -79,6 +79,23 @@ class Laporan_penilaian extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    //coba
+    function tampil_nilai_staff_perPegawai($periode_tahun, $pegawai_id, $nama_jabatan, $nama_pegawai, $jabatan_id,$staff_id)
+    {
+        $data['title'] = 'Halaman Detail Penilaian';
+        $data['periode_nilai'] = $this->Laporan_m->periode_nilai_staff_perPegawai($periode_tahun, $pegawai_id);
+        $data['jabatan'] = $nama_jabatan;
+        $data['jabatan_id'] = $jabatan_id;
+        $data['tahun'] = $periode_tahun;
+        $data['nama_pegawai'] = $nama_pegawai;
+        $data['staff_id'] = $staff_id;
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/navbar');
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan_penilaian/periode_nilai_staff_perPegawai', $data);
+        $this->load->view('templates/footer');
+    }
+
 
     function detail_nilai($periode_tahun, $jabatan_id, $nama_jabatan)
     {

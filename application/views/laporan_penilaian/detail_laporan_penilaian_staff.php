@@ -42,19 +42,29 @@
                                         <th>#</th>
                                         <th>NIP</th>
                                         <th>Nama Pegawai</th>
-                                        <th>Nilai Akhir</th>
+                                        <!-- <th>Nilai Akhir</th> -->
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $no = 1;
                                     foreach ($detail_penilaian_staff as $key => $value) {
+                                        $periode_tahun = date('Y', strtotime($value['tgl_periode']));
+                                        $pegawai_id = $value['pegawai_id'];
+                                        $jabatan = $value['nama_jabatan'];
+                                        $nama_pegawai = $value['nama_pegawai'];
+                                        $jabatan_id = $value['jabatan_id'];
+                                        $staff_id = $value['staff_id'];
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
                                             <td><?= $value['nip_pegawai'] ?></td>
                                             <td><?= $value['nama_pegawai'] ?></td>
-                                            <td><?= $value['nilai_akhir'] ?></td>
+                                            <!-- <td><?php //$value['nilai_akhir'] ?></td> -->
+                                            <td>
+                                            <a href="<?= base_url('Laporan_penilaian/tampil_nilai_staff_perPegawai/' . $periode_tahun . '/' . $pegawai_id . '/' . $jabatan . '/' . $nama_pegawai . '/' . $jabatan_id.'/'.$staff_id) ?>" class="btn btn-primary btn-sm"><i class="fas fa-solid fa-eye"></i></a>
+                                            </td>
                                         </tr>
                                     <?php }
                                     ?>
