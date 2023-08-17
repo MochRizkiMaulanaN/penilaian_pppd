@@ -59,6 +59,8 @@ class Laporan_m extends CI_Model
         $this->db->where('Year(tgl_periode)', $periode_tahun);
         $this->db->where('na.jabatan_id', $jabatan_id);
         $this->db->order_by('nilai_akhir', 'desc');
+        $this->db->group_by('pegawai_id');
+        $this->db->group_by('Year(tgl_periode)');
         return $this->db->get()->result_array();
     }
 
@@ -80,6 +82,8 @@ class Laporan_m extends CI_Model
         $this->db->join('tb_pegawai p', 'na.pegawai_id = p.id_pegawai');
         $this->db->where('Year(tgl_periode)', $periode_tahun);
         $this->db->where('na.jabatan_id', $jabatan);
+        $this->db->group_by('pegawai_id');
+        $this->db->group_by('Year(tgl_periode)');
         return $this->db->get()->result_array();
     }
 
