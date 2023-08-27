@@ -57,7 +57,8 @@
                                         <div class="form-group row">
                                             <label for="inputEmail3" class="col-sm-2 col-form-label">Jabatan</label>
                                             <div class="col-sm-10">
-                                                <select name="jabatan" class="form-control" id="">
+                                                <select name="jabatan" class="form-control select2_tambah" id="jabatan">
+                                                    <option value=""></option>
                                                     <?php foreach ($jabatan as $key => $value) : ?>
                                                         <option value="<?= $value['id_jabatan'] ?>"> <?= $value['nama_jabatan'] ?></option>
                                                     <?php endforeach ?>
@@ -67,10 +68,9 @@
                                         <div class="form-group row">
                                             <label for="kuota" class="col-sm-2 col-form-label">Kuota</label>
                                             <div class="col-sm-10">
-                                                <input type="number" class="form-control" name="kuota">
-                                                <small class="text-danger"><?= form_error('kuota') ?></small>
+                                                <input type="text" class="form-control" name="kuota" id="kuota" readonly>
                                             </div>
-                                           
+
                                         </div>
 
                                     </div>
@@ -95,3 +95,32 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<script>
+    $(function() {
+
+        $('.select2_tambah').select2({
+            placeholder: "Pilih Jabatan",
+            allowClear: true
+        })
+
+    })
+
+    $("#jabatan").change(function(params) {
+        let id_jabatan = $(this).val()
+
+        $.ajax({
+            method: 'post',
+            url: '<?= base_url('Rekomendasi/tampil_kuota_pegawai') ?>',
+            data: {
+                id_jabatan: id_jabatan,
+            },
+            dataType: 'json',
+            success: function(data) {
+                $("#kuota").val(data.kuota)
+                console.log(data.kuota)
+            }
+        })
+
+    })
+</script>

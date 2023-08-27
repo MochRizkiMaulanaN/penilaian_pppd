@@ -78,6 +78,15 @@
                     <li class="nav-header">Kepala & Staf</li>
                     <?php if ($this->session->userdata('role_id') == 2) { ?>
                         <li class="nav-item">
+                            <a href="<?= base_url('Kuota_pegawai') ?>" class="nav-link">
+                                <i class="nav-icon fas fa-solid fa-layer-group"></i>
+                                <p>
+                                    Kelola Kuota Pegawai
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="<?= base_url('Kriteria') ?>" class="nav-link">
                                 <i class="nav-icon fas fa-solid fa-layer-group"></i>
                                 <p>

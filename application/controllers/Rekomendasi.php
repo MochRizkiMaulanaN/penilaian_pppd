@@ -114,6 +114,7 @@ class Rekomendasi extends CI_Controller
 
             //    redirect('Rekomendasi/detail/' . $jabatan_id . '/' . $periode_tahun);
             //} else {
+
             if ($keputusan == '1') {
                 $akhir_kontrak = $this->db->get_where('tb_pegawai', ['id_pegawai' => $id_pegawai])->row_array();
 
@@ -187,6 +188,19 @@ class Rekomendasi extends CI_Controller
 
             $status = 1;
             echo json_encode($status);
+        }
+    }
+
+    public function tampil_kuota_pegawai()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_jabatan = $this->input->post('id_jabatan');
+
+            $kuota = $this->db->get_where('tb_kuota_pegawai', ['jabatan_id' => $id_jabatan])->row_array();
+
+            $data['kuota'] = $kuota['jumlah_kuota'];
+
+            echo json_encode($data);
         }
     }
 }
