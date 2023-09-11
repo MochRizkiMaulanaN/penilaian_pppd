@@ -429,11 +429,11 @@
             hapus(id)
         })
 
-        $('.btn_ubah').click(function() {
-            id = $(this).data('id');
-            tampil_pengguna_id(id)
+            $('.btn_ubah').click(function() {
+                id = $(this).data('id');
+                tampil_pengguna_id(id)
 
-        })
+            })
 
         // $('#role_pengguna_1').change(function() {
         //     id_role = $(this).val()

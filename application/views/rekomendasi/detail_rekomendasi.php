@@ -87,7 +87,7 @@
                                         ?>
                                     </tbody>
                                 </table>
-                                <button type="submit" class="btn btn-success btn_keputusan"><i class="fas fa-solid fa-check "></i> Selesai</button>
+                                <button type="submit" class="btn btn-success"><i class="fas fa-solid fa-check "></i> Selesai</button>
                             </form>
                         </div>
                         <!-- /.card-body -->
@@ -107,6 +107,12 @@
         return confirm('Apakah anda yakin ingin perpanjangan atau pemutusan kontrak pada data yang dipilih?')
     }
 
+    $('.btn_keputusan').click(function() {
+        nip = $(this).data('nip')
+        nama = $(this).data('nama')
+        id = $(this).data('id')
+        perpanjangan(nip, nama, id)
+    })
     $('.btn_perpanjangan').click(function() {
         nip = $(this).data('nip')
         nama = $(this).data('nama')
